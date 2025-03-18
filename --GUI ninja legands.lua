@@ -1,0 +1,1353 @@
+--GUI ninja legands
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡️", "DarkTheme")
+
+local Tab = Window:NewTab("🏠MAIN🏠")
+local Section = Tab:NewSection("⚔️Ninja Legands⚔️")
+local Section = Tab:NewSection("🔥v1.1🔥")
+local Section = Tab:NewSection("📌Subscride📌")
+Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
+    setclipboard("https://www.youtube.com/@Dark_MAX0207")
+    print("Thank you for subscribing To The YouTube.")
+end)
+Section:NewButton("Subscribe Me(TikTok)", "Subscribe to the TikTok channel dark_3014.", function()
+    setclipboard("https://www.tiktok.com/@dark_3014")
+    print("Thank you for subscribing To The TikTok.")
+end)
+
+local Tab = Window:NewTab("🛡️MENU🛡️")
+-- Basic
+local Section = Tab:NewSection("🐓KaiTan🐓")
+
+Section:NewToggle("🐓🗒️KaiTanScript🐓🗒️", "KaiTan Farm", function(state)
+    if state then
+        local Number = 0
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local playerGui = player:WaitForChild("PlayerGui")
+-------------------------------------------------------------------
+local SoundService = game:GetService("SoundService")
+
+-- ปิดเสียงทั้งหมดในเกม
+local function muteAllSounds()
+    for _, sound in pairs(workspace:GetDescendants()) do
+        if sound:IsA("Sound") then
+            sound:Stop()  -- หยุดเสียง
+            sound.Volume = 0  -- ตั้งเสียงให้เป็น 0
+        end
+    end
+end
+
+-- เรียกฟังก์ชันนี้เพื่อปิดเสียงเมื่อเริ่มต้น
+muteAllSounds()
+-------------------------------------------------------------------
+local screenGui = Instance.new("ScreenGui")
+screenGui.IgnoreGuiInset = true
+screenGui.DisplayOrder = -100 -- ทำให้ UI นี้อยู่ใต้ UI อื่นๆ
+screenGui.Parent = playerGui
+
+local whiteFrame = Instance.new("Frame")
+whiteFrame.Size = UDim2.new(1, 0, 1, 0)
+whiteFrame.Position = UDim2.new(0, 0, 0, 0)
+whiteFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+whiteFrame.BorderSizePixel = 0
+whiteFrame.Parent = screenGui
+
+-- ปุ่มเปิด/ปิดจอขาว
+local UIS = game:GetService("UserInputService")
+local isEnabled = true
+-------------------------------------------------------------------
+local VirtualUser = game:GetService('VirtualUser')
+ 
+game:GetService('Players').LocalPlayer.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+end)
+-------------------------------------------------------------------
+local ToDisable = {
+	Textures = true,
+	VisualEffects = true,
+	Parts = true,
+	Particles = true,
+	Sky = true
+}
+ 
+local ToEnable = {
+	FullBright = false
+}
+ 
+local Stuff = {}
+ 
+for _, v in next, game:GetDescendants() do
+	if ToDisable.Parts then
+		if v:IsA("Part") or v:IsA("Union") or v:IsA("BasePart") then
+			v.Material = Enum.Material.SmoothPlastic
+			table.insert(Stuff, 1, v)
+		end
+	end
+ 
+	if ToDisable.Particles then
+		if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Explosion") or v:IsA("Sparkles") or v:IsA("Fire") then
+			v.Enabled = false
+			table.insert(Stuff, 1, v)
+		end
+	end
+ 
+	if ToDisable.VisualEffects then
+		if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("DepthOfFieldEffect") or v:IsA("SunRaysEffect") then
+			v.Enabled = false
+			table.insert(Stuff, 1, v)
+		end
+	end
+ 
+	if ToDisable.Textures then
+		if v:IsA("Decal") or v:IsA("Texture") then
+			v.Texture = ""
+			table.insert(Stuff, 1, v)
+		end
+	end
+ 
+	if ToDisable.Sky then
+		if v:IsA("Sky") then
+			v.Parent = nil
+			table.insert(Stuff, 1, v)
+		end
+	end
+end
+ 
+game:GetService("TestService"):Message("Effects Disabler Script : Successfully disabled "..#Stuff.." assets / effects. Settings :")
+ 
+for i, v in next, ToDisable do
+	print(tostring(i)..": "..tostring(v))
+end
+ 
+if ToEnable.FullBright then
+    local Lighting = game:GetService("Lighting")
+ 
+    Lighting.FogColor = Color3.fromRGB(255, 255, 255)
+    Lighting.FogEnd = math.huge
+    Lighting.FogStart = math.huge
+    Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+    Lighting.Brightness = 5
+    Lighting.ColorShift_Bottom = Color3.fromRGB(255, 255, 255)
+    Lighting.ColorShift_Top = Color3.fromRGB(255, 255, 255)
+    Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
+    Lighting.Outlines = true
+end
+-------------------------------------------------------------------
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = playerGui
+
+-- สร้าง TextLabel สำหรับแสดง FPS
+local fpsLabel = Instance.new("TextLabel")
+fpsLabel.Size = UDim2.new(0, 150, 0, 50) -- ขนาดกล่องข้อความ
+fpsLabel.Position = UDim2.new(1, -160, 1, -60) -- มุมขวาล่าง
+fpsLabel.BackgroundTransparency = 1 -- ไม่มีพื้นหลัง
+fpsLabel.TextColor3 = Color3.new(1, 1, 1) -- สีขาว
+fpsLabel.TextScaled = true
+fpsLabel.Font = Enum.Font.SourceSansBold
+fpsLabel.Parent = screenGui
+
+-- เพิ่มขอบสีดำให้กับข้อความ
+fpsLabel.TextStrokeTransparency = 0 -- ความทึบของขอบ
+fpsLabel.TextStrokeColor3 = Color3.new(0, 0, 0) -- ขอบสีดำ
+
+-- ฟังก์ชันอัปเดตค่า FPS
+local lastTime = tick()
+local fps = 0
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    local currentTime = tick()
+    fps = math.floor(1 / (currentTime - lastTime))
+    lastTime = currentTime
+    
+    fpsLabel.Text = "FPS: " .. fps
+end)
+-------------------------------------------------------------------
+humanoidRootPart.CFrame = CFrame.new(76, 766, -148)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(232, 2014, 266)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(155, 4047, 66)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(142, 5657, 73)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(139, 9285, 69)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(141, 13680, 68)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(141, 17686, 69)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(140, 24070, 69)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(138, 28256, 63)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(138, 33207, 65)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(138, 39317, 63)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(138, 46010, 64)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(139, 52608, 63)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(138, 59594, 65)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(139, 66669, 64)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(139, 70271, 65)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(137, 74443, 66)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(138, 79747, 65)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(139, 83199, 64)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(138, 87051, 65)
+task.wait()
+humanoidRootPart.CFrame = CFrame.new(138, 91246, 63)
+task.wait()
+-------------------------------------------------------------------
+humanoidRootPart.CFrame = CFrame.new(77, 91246, 124)
+task.wait()
+-------------------------------------------------------------------
+while wait() do
+    humanoidRootPart.CFrame = CFrame.new(96, 10259, 55)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(317, 698, -6)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(43, 44305, -63)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(299, 1185, 55)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(43, 11557, -63)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(181, 90639, -109)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(394, 90871, -389)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(513, 199, 209)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(96, 29683, 55)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(15, 43561, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(96, 14831, 55)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(43, 3171, -63)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(15, 2993, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(-88, 164, 309)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(15, 50158, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(43, 37613, -63)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(43, 7728, -63)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(-18, 374, 89)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(257, 408, 270)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(-39, 918, 82)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(96, 6430, 55)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(145, 615, 90)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(293, 165, 56)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(87, 1257, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(90, 816, 224)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(96, 35693, 54)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(72, 178, -240)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(45, 8289, -33)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(29, 8230, 183)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(61, 89080, -154)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(14, 7205, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(14, 30857, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(142, 89445, -125)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(42, 31602, -64)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(42, 50903, -64)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(353, 2047, 49)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(181, 88315, 208)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(202, 99, 276)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(95, 55970, 54)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(91, 4538, -30)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(325, 218, -96)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(175, 363, -16)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(45, 3381, -33)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(-9, 5575, 224)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(29, 3323, 183)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(14, 11035, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(82, 4680, 11)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(-15, 13214, -121)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(45, 4802, -33)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(125, 1021, -79)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(45, 12118, -33)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(-15, 3912, -121)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(16, 2036, 194)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(14, 15607, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(29, 12059, 183)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(46, 5014, -40)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(14, 36868, -43)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(42, 16129, -64)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(135, 275, 334)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(95, 42386, 54)
+    task.wait()
+    humanoidRootPart.CFrame = CFrame.new(-15, 8819, -121)
+    task.wait()
+    ----------------------------------------------------------------------------------
+    humanoidRootPart.CFrame = CFrame.new(77, 91246, 124)
+    task.wait()
+    ----------------------------------------------------------------------------------
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Yellow Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Yellow Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Green Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Green Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Orange Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Orange Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Blue Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Blue Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Purple Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Purple Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Red Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Red Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Brown Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Brown Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Black Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Black Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Golden Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Golden Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Tiger Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Tiger Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Mantis Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Mantis Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Ultra Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Ultra Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Master Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Master Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Dragon Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Dragon Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Astral Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Astral Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Enchanted Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Enchanted Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Magical Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Magical Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Heatwave Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Heatwave Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Tornado Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Tornado Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Powered Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Powered Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Tundra Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Tundra Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Guardian Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Guardian Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Corrupted Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Corrupted Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Zephyr Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Zephyr Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Lightning Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Lightning Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Astro Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Astro Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Exo Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Exo Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Python Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Python Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Rainbow Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Rainbow Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Belt Of Legends"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Belt Of Legends"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyBelt",
+        [2] = "Sky Ninja Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipBelt",
+        [2] = "Sky Ninja Belt"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    ----------------------------------------------------------------------------------
+    ---
+    ---
+    ---
+    local args = {
+        [1] = "buySword",
+        [2] = "Electral Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Electral Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Ultra Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))    
+    local args = {
+        [1] = "equipSword",
+        [2] = "Ultra Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Crimson Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Crimson Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Corrupted Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Corrupted Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Shadow Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "equipSword",
+        [2] = "Shadow Bamboo"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Peace Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Peace Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Enraged Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Enraged Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Golden Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Golden Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Royal Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Royal Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Enchanted Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Enchanted Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Shadowblede"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Shadowblede"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Wooden Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Wooden Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Electral Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Electral Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Infernal Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Infernal Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Ultra Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Ultra Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Shadow Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Shadow Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Light Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Light Staff"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Electro Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Electro Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Overdrive Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Overdrive Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Charged Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Charged Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dark Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dark Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Crimson Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Crimson Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Inferno Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Inferno Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Electral Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Electral Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Guardian Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Guardian Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Mystical Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Mystical Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Shadow Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Shadow Naginata"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Electro Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Electro Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Inferno Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Inferno Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Corrupt Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Corrupt Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Ultra Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Ultra Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Balance Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Balance Katana"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Electro Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Electro Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Inferno Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Inferno Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Peace Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Peace Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Corrupted Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Corrupted Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Shadow Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Shadow Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Corrupt Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Corrupt Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Ultra Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Ultra Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Power Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Power Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Shadow Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Shadow Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Inferno Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Inferno Odachi"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Ninja Sai"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Ninja Sai"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    
+    local args = {
+        [1] = "buySword",
+        [2] = "Corrupted Sai"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Corrupted Sai"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Unstable Sai"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Unstable Sai"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Ultra Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Ultra Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Corrupt Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Corrupt Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buySword",
+        [2] = "Dual Dark Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipSword",
+        [2] = "Dual Dark Scythe"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    ----------------------------------------------------------------------------------
+    local args = {
+        [1] = "buyRank",
+        [2] = "Grasshopper"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipRank",
+        [2] = "Grasshopper"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyRank",
+        [2] = "Apprentice"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipRank",
+        [2] = "Apprentice"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyRank",
+        [2] = "Samurai"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    local args = {
+        [1] = "equipRank",
+        [2] = "Samurai"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+
+    local args = {
+        [1] = "buyRank",
+        [2] = "Assassin"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))    
+    local args = {
+        [1] = "equipRank",
+        [2] = "Assassin"
+    }
+    game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    ----------------------------------------------------------------------------------
+    while Number < 15 do
+        local args = {
+            [1] = "swingKatana"
+        }
+        game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+    end
+    Number = 0
+end
+    else
+        local TeleportService = game:GetService("TeleportService")
+local player = game.Players.LocalPlayer
+
+-- ฟังก์ชันสำหรับรีโหลดเกมและกลับไปเซิร์ฟเวอร์เดิม
+local function teleportToSameServer()
+    -- เก็บข้อมูลเกี่ยวกับเซิร์ฟเวอร์ปัจจุบัน
+    local currentPlaceId = game.PlaceId
+    local currentJobId = game.JobId
+
+    -- ใช้ TeleportService เพื่อรีโหลดเกมและกลับไปเซิร์ฟเวอร์เดิม
+    TeleportService:TeleportToPlaceInstance(currentPlaceId, currentJobId, player)
+end
+
+-- เรียกใช้ฟังก์ชันเมื่อพร้อม
+teleportToSameServer()
+    end
+end)
+
+local Section = Tab:NewSection("🗝️Shortcut Key🗝️")
+Section:NewKeybind("⌨️🗝️Key Code⌨️🗝️", "Shortcut to close/open GUI", Enum.KeyCode.K, function()
+	Library:ToggleUI()
+end)
