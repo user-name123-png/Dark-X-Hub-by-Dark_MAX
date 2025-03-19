@@ -208,7 +208,7 @@ task.wait()
 humanoidRootPart.CFrame = CFrame.new(138, 91246, 63)
 task.wait()
 -------------------------------------------------------------------
-humanoidRootPart.CFrame = CFrame.new(77, 91246, 124)
+humanoidRootPart.CFrame = CFrame.new(223, 2014, 181)
 task.wait()
 -------------------------------------------------------------------
 while wait() do
@@ -335,7 +335,7 @@ while wait() do
     humanoidRootPart.CFrame = CFrame.new(-15, 8819, -121)
     task.wait()
     ----------------------------------------------------------------------------------
-    humanoidRootPart.CFrame = CFrame.new(77, 91246, 124)
+    humanoidRootPart.CFrame = CFrame.new(223, 2014, 181)
     task.wait()
     ----------------------------------------------------------------------------------
     local args = {
@@ -1325,11 +1325,14 @@ while wait() do
             [1] = "swingKatana"
         }
         game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+        wait(0.5)
+        game:GetService("Players").LocalPlayer:WaitForChild("ninjaEvent"):FireServer(unpack(args))
+        Number = Number + 1
     end
     Number = 0
-end
-    else
-        local TeleportService = game:GetService("TeleportService")
+    end
+else
+    local TeleportService = game:GetService("TeleportService")
 local player = game.Players.LocalPlayer
 
 -- ฟังก์ชันสำหรับรีโหลดเกมและกลับไปเซิร์ฟเวอร์เดิม
