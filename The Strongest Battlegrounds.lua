@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️The Strongest Battlegrounds⚔️")
-local Section = Tab:NewSection("🔥v1.1🔥")
+local Section = Tab:NewSection("🔥v1.2🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -69,6 +69,59 @@ Section:NewKeybind("🗑️หยิบถังขยะ🗑️", "กด E เ
     debounce = false -- ปลดล็อกให้กดได้อีกครั้ง
 end)
 
+-- ฟังก์ชันอัปเดตรายชื่อผู้เล่น
+local function getPlayerList()
+    local players = {}
+    for _, v in pairs(game:GetService("Players"):GetPlayers()) do
+        table.insert(players, v.Name)
+    end
+    return players
+end
+
+-- ตัวแปรเก็บผู้เล่นที่เลือก
+local PlayerTP
+local dropdown = Section:NewDropdown("🕹️เลือก Player🕹️", "เลือก Player ที่อยาก TP ไปหา", getPlayerList(), function(selected)
+    PlayerTP = selected
+end)
+
+-- อัปเดตรายชื่ออัตโนมัติเมื่อมีผู้เล่นเข้า/ออก
+game:GetService("Players").PlayerAdded:Connect(function()
+    dropdown:Refresh(getPlayerList())
+end)
+game:GetService("Players").PlayerRemoving:Connect(function()
+    dropdown:Refresh(getPlayerList())
+end)
+
+-- ตัวแปรเช็คว่าเปิด Toggle หรือไม่
+local toggleState = false
+
+Section:NewToggle("⚡🔁เปิด/ปิด TP ตลอด⚡🔁", "เปิด/ปิด TP ไปหาคนที่เลือก", function(state)
+    toggleState = state
+    if toggleState then
+        print("✅ เริ่ม TP ไปหาผู้เล่นที่เลือก")
+        while toggleState do
+            local target = game.Players:FindFirstChild(PlayerTP)
+            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
+            else
+                print("❌ ไม่พบผู้เล่น หรือผู้เล่นออกจากเกมไปแล้ว")
+            end
+            task.wait()
+        end
+    else
+        print("❌ หยุด TP")
+    end
+end)
+
+-- ปุ่ม TP ไปหาผู้เล่นที่เลือก
+Section:NewButton("⚡🕹️กดเพื่อ TP⚡🕹️", "กดเพื่อ TP ไปหาคนที่เลือก", function()
+    local target = game.Players:FindFirstChild(PlayerTP)
+    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
+    else
+        print("❌ ไม่พบผู้เล่น หรือผู้เล่นออกจากเกมไปแล้ว")
+    end
+end)
 
 Section:NewButton("🏔️วาปไปบนภูเขา🏔️", "วาปไปยังยอดภูเขา", function()
     --TPไปที่เขา
@@ -112,11 +165,6 @@ Section:NewButton("⚡Script วาป⚡", "Script สำหรับวาป�
     end)
 end)
 
-Section:NewButton("💎Script ล่องหน💎", "Script สำหรับกด G เพื่อล่องหน", function()
-    --ล่องหน
-loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))()
-end)
-
 Section:NewButton("🔴🔵สกิล Gojo🔴🔵", "ใส่สกิล Gojo ขอไซตามะ", function()
     --สกิล Gojo
 local player = game.Players.LocalPlayer
@@ -138,6 +186,83 @@ player.CharacterAdded:Connect(function()
     wait(1) -- รอให้ตัวละครโหลด
     loadScript()
 end)
+end)
+
+Section:NewButton("🏴‍☠️Script ดีด🏴‍☠️", "Script ดีด Player ที่มาแตะเรา", function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/0Ben1/fe/main/obf_5wpM7bBcOPspmX7lQ3m75SrYNWqxZ858ai3tJdEAId6jSI05IOUB224FQ0VSAswH.lua.txt'),true))()
+end)
+
+Section:NewButton("🔎มองทะลุ Player🔎", "เห็นชื่อของ Player และระยะห่างระหว่างเรากับ Player ทุกคนจากระยะไกล", function()
+    local Players = game:GetService("Players")
+
+-- Function สำหรับการแสดงชื่อและระยะ
+local function addBillboard(player)
+    -- รอให้ตัวละครโหลด
+    local character = player.Character or player.CharacterAdded:Wait()
+    local head = character:WaitForChild("Head")
+
+    -- ตรวจสอบว่า NameTag มีอยู่แล้วหรือไม่ ถ้ามีแล้วให้ลบทิ้งก่อน
+    if head:FindFirstChild("NameTag") then
+        head:FindFirstChild("NameTag"):Destroy()
+    end
+
+    -- สร้าง BillboardGui
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "NameTag"
+    billboard.Adornee = head
+    billboard.Size = UDim2.new(0, 150, 0, 40) -- ขนาดเพิ่มขึ้นเล็กน้อย (150x40)
+    billboard.StudsOffset = Vector3.new(0, 3, 0)
+    billboard.AlwaysOnTop = true
+    billboard.MaxDistance = math.huge
+
+    -- สร้าง TextLabel สำหรับแสดงชื่อและระยะ
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Parent = billboard
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = Color3.new(1, 1, 1) -- สีขาว
+    textLabel.TextStrokeTransparency = 0.5 -- เส้นขอบตัวอักษร
+    textLabel.TextStrokeColor3 = Color3.new(0, 0, 0) -- เส้นขอบสีดำ
+    textLabel.TextScaled = true
+    textLabel.Font = Enum.Font.GothamBold
+
+    -- ใส่ BillboardGui ใน Head
+    billboard.Parent = head
+
+    -- ฟังก์ชันอัปเดตข้อความแสดงระยะ
+    local function updateDistance()
+        local localPlayer = Players.LocalPlayer
+        if localPlayer and localPlayer.Character and localPlayer.Character:FindFirstChild("Head") then
+            local localHead = localPlayer.Character.Head
+            local distance = (head.Position - localHead.Position).Magnitude
+            textLabel.Text = string.format("%s\n%.2f m", player.Name, distance)
+        else
+            textLabel.Text = player.Name
+        end
+    end
+
+    -- อัปเดตระยะเป็นระยะ ๆ
+    game:GetService("RunService").RenderStepped:Connect(updateDistance)
+end
+
+-- เมื่อผู้เล่นถูกเพิ่มเข้ามาในเกม
+Players.PlayerAdded:Connect(function(player)
+    -- เมื่อ Character ถูกสร้างขึ้น
+    player.CharacterAdded:Connect(function()
+        addBillboard(player)
+    end)
+end)
+
+-- สำหรับผู้เล่นที่อยู่ในเกมแล้ว
+for _, player in pairs(Players:GetPlayers()) do
+    if player.Character then
+        addBillboard(player)
+    end
+    -- รองรับกรณีที่ตัวละครของผู้เล่นยังไม่ถูกสร้าง
+    player.CharacterAdded:Connect(function()
+        addBillboard(player)
+    end)
+end
 end)
 
 local Tab = Window:NewTab("⚙️การตั้งค่า⚙️")
