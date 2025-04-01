@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️The Strongest Battlegrounds⚔️")
-local Section = Tab:NewSection("🔥v1.2🔥")
+local Section = Tab:NewSection("🔥v1.3🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -20,6 +20,16 @@ local Tab = Window:NewTab("🛡️เมนู🛡️")
 local Section = Tab:NewSection("🐓พื้นฐาน🐓")
 
 local debounce = false -- ใช้ตัวแปรกันการกดซ้ำ
+
+Section:NewToggle("✊Auto ตี✊", "ตีธรรมดาอัตโนมัติ", function(state)
+    if state then
+        local args = { [1] = { ["Goal"] = "LeftClick" } }
+        game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
+    else
+        local args = { [1] = { ["Goal"] = "LeftClickRelease" } }
+        game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
+    end
+end)
 
 Section:NewKeybind("🗑️หยิบถังขยะ🗑️", "กด E เพื่อวาปไปหยิบถังขยะแล้ววาปกลับมาที่เดิม", Enum.KeyCode.E, function()
     if debounce then return end -- ถ้ากำลังทำงานอยู่ให้หยุด
@@ -67,6 +77,17 @@ Section:NewKeybind("🗑️หยิบถังขยะ🗑️", "กด E เ
     teleportToRandomTrash() -- เรียกใช้งาน
 
     debounce = false -- ปลดล็อกให้กดได้อีกครั้ง
+end)
+
+Section:NewKeybind("🔥พาลงนรก🔥", "พา Player ไปตาย", Enum.KeyCode.R, function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local originalPosition = humanoidRootPart.CFrame -- จำตำแหน่งเดิม
+
+humanoidRootPart.CFrame = CFrame.new(-27529, 50654, -38183)
+task.wait(2)
+humanoidRootPart.CFrame = originalPosition
 end)
 
 -- ฟังก์ชันอัปเดตรายชื่อผู้เล่น
