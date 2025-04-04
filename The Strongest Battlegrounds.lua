@@ -90,13 +90,13 @@ task.wait(2)
 humanoidRootPart.CFrame = originalPosition
 end)
 
-Section:NewKeybind("⚡🕹️Y 555⚡🕹️", "TP ไปที่ตำแหน่ง Y 555 โดยที่ X,Z ยังคงเดิม", Enum.KeyCode.T, function()
+Section:NewKeybind("⚡🕹️Y+555⚡🕹️", "เพิ่มตำแหน่ง Y+555 โดยที่ X,Z ยังคงเดิม", Enum.KeyCode.T, function()
 	local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
--- วาร์ปไปที่ตำแหน่ง Y = 555 โดยให้ X และ Z เหมือนเดิม
-humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, 555, humanoidRootPart.Position.Z)
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    
+    -- เพิ่มค่า Y ขึ้น 114 หน่วย
+    humanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 114, 0)
 end)
 
 local Tab = Window:NewTab("🎮ผู้เล่น🎮")
