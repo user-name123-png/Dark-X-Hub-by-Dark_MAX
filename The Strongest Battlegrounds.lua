@@ -90,6 +90,19 @@ task.wait(2)
 humanoidRootPart.CFrame = originalPosition
 end)
 
+Section:NewKeybind("⚡🕹️Y 555⚡🕹️", "TP ไปที่ตำแหน่ง Y 555 โดยที่ X,Z ยังคงเดิม", Enum.KeyCode.T, function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- วาร์ปไปที่ตำแหน่ง Y = 555 โดยให้ X และ Z เหมือนเดิม
+humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, 555, humanoidRootPart.Position.Z)
+end)
+
+local Tab = Window:NewTab("🎮ผู้เล่น🎮")
+
+local Section = Tab:NewSection("🎮⚡หมวดหมู่ Player🎮⚡")
+
 -- ฟังก์ชันอัปเดตรายชื่อผู้เล่น
 local function getPlayerList()
     local players = {}
@@ -144,14 +157,9 @@ Section:NewButton("⚡🕹️กดเพื่อ TP⚡🕹️", "กดเพ�
     end
 end)
 
-Section:NewButton("🏔️วาปไปบนภูเขา🏔️", "วาปไปยังยอดภูเขา", function()
-    --TPไปที่เขา
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local Tab = Window:NewTab("➕Script เพิ่มเติม➕")
 
-humanoidRootPart.CFrame = CFrame.new(-13, 653, -385)
-end)
+local Section = Tab:NewSection("➕🔥หมวด Script เพิ่มเติม➕🔥")
 
 Section:NewButton("⚡Script วาป⚡", "Script สำหรับวาปไปไหนมาไหน", function()
     local player = game.Players.LocalPlayer
@@ -186,31 +194,21 @@ Section:NewButton("⚡Script วาป⚡", "Script สำหรับวาป�
     end)
 end)
 
-Section:NewButton("🔴🔵สกิล Gojo🔴🔵", "ใส่สกิล Gojo ขอไซตามะ", function()
-    --สกิล Gojo
-local player = game.Players.LocalPlayer
-
--- ฟังก์ชันโหลดสคริปต์
-local function loadScript()
-    _G.settings = {
-        ["RedStartupId"] = "rbxassetid://1177475221",
-        ["RedHitId"] = "rbxassetid://8625377966",
-    }
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletfan2007/BaldyToSorcerer/main/Latest.lua"))()
-end
-
--- โหลดครั้งแรก
-loadScript()
-
--- โหลดใหม่เมื่อตาย
-player.CharacterAdded:Connect(function()
-    wait(1) -- รอให้ตัวละครโหลด
-    loadScript()
-end)
-end)
-
 Section:NewButton("🏴‍☠️Script ดีด🏴‍☠️", "Script ดีด Player ที่มาแตะเรา", function()
     loadstring(game:HttpGet(('https://raw.githubusercontent.com/0Ben1/fe/main/obf_5wpM7bBcOPspmX7lQ3m75SrYNWqxZ858ai3tJdEAId6jSI05IOUB224FQ0VSAswH.lua.txt'),true))()
+end)
+
+local Tab = Window:NewTab("➕🔴ตัวช่วยเพิ่มเติม➕🔴")
+
+local Section = Tab:NewSection("➕🔴➕ตัวช่วยเพิ่มเติม➕🔴➕")
+
+Section:NewButton("🏔️วาปไปบนภูเขา🏔️", "วาปไปยังยอดภูเขา", function()
+    --TPไปที่เขา
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+humanoidRootPart.CFrame = CFrame.new(-13, 653, -385)
 end)
 
 Section:NewButton("🔎มองทะลุ Player🔎", "เห็นชื่อของ Player และระยะห่างระหว่างเรากับ Player ทุกคนจากระยะไกล", function()
@@ -284,6 +282,29 @@ for _, player in pairs(Players:GetPlayers()) do
         addBillboard(player)
     end)
 end
+end)
+
+Section:NewButton("🔴🔵สกิล Gojo🔴🔵", "ใส่สกิล Gojo ขอไซตามะ", function()
+    --สกิล Gojo
+local player = game.Players.LocalPlayer
+
+-- ฟังก์ชันโหลดสคริปต์
+local function loadScript()
+    _G.settings = {
+        ["RedStartupId"] = "rbxassetid://1177475221",
+        ["RedHitId"] = "rbxassetid://8625377966",
+    }
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletfan2007/BaldyToSorcerer/main/Latest.lua"))()
+end
+
+-- โหลดครั้งแรก
+loadScript()
+
+-- โหลดใหม่เมื่อตาย
+player.CharacterAdded:Connect(function()
+    wait(1) -- รอให้ตัวละครโหลด
+    loadScript()
+end)
 end)
 
 local Tab = Window:NewTab("⚙️การตั้งค่า⚙️")
