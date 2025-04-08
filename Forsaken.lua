@@ -238,7 +238,7 @@ local function teleportToRandomGenerator()
         
         if targetPart then
             local originalPosition = humanoidRootPart.CFrame -- จำตำแหน่งเดิม
-            humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(5, 10, 0) -- เทเลพอร์ตไปที่ Generator
+            humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(3, 10, 0) -- เทเลพอร์ตไปที่ Generator
         end
     else
         warn("ไม่พบ Generator ใน Map")
