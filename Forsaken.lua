@@ -19,11 +19,47 @@ local Tab = Window:NewTab("🛡️เมนู🛡️")
 -- Basic
 local Section = Tab:NewSection("🐓🧬ตัวช่วยเพิ่มเติม🐓🧬")
 
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local workspace = game:GetService("Workspace")
+
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local toggleEnabled = false
+local connection = nil
+
+Section:NewToggle("🎯Aimbot Killers🎯", "กล้องจะหันไปทาง Killers ตลอดเวลา", function(state)
+    toggleEnabled = state
+
+    if toggleEnabled then
+        print("Toggle On")
+
+        connection = RunService.RenderStepped:Connect(function()
+            local killersFolder = workspace:FindFirstChild("Players") and workspace.Players:FindFirstChild("Killers")
+            if not killersFolder then return end
+
+            local firstKiller = killersFolder:FindFirstChildWhichIsA("Model")
+            if firstKiller and firstKiller:FindFirstChild("HumanoidRootPart") then
+                local hrp = firstKiller.HumanoidRootPart
+                Camera.CFrame = CFrame.new(Camera.CFrame.Position, hrp.Position)
+            end
+        end)
+
+    else
+        print("Toggle Off")
+        if connection then
+            connection:Disconnect()
+            connection = nil
+        end
+    end
+end)
+
 local NoclipEnabled = false
 local player = game.Players.LocalPlayer
 local RunService = game:GetService("RunService")
 
-Section:NewToggle("🚪เดินทะลุ🚪", "เปิดหรือปิดการเดินทะลุสิ่งของ", function(state)
+Section:NewToggle("🚪เปิด/ปิด เดินทะลุ🚪", "เปิดหรือปิดการเดินทะลุสิ่งของ", function(state)
     NoclipEnabled = state
     if NoclipEnabled then
         print("Noclip เปิด")
@@ -143,11 +179,11 @@ end
 
 -- เริ่มตรวจจับ
 task.spawn(watchMapIngame)
-task.wait(5)
+task.wait(15)
     end
 end)
 
-Section:NewButton("ลบหมอก❌💨", "ปรับ Atmosphere.Density เป็น 0", function()
+Section:NewButton("❌💨ลบหมอก❌💨", "ปรับ Atmosphere.Density เป็น 0", function()
 while task.wait() do
     local Lighting = game:GetService("Lighting")
 local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere")
@@ -172,7 +208,7 @@ atmosphere:GetPropertyChangedSignal("Density"):Connect(function()
         enforceZeroDensity()
     end
 end)
-task.wait(5)
+task.wait(15)
 end
 end)
 
@@ -238,7 +274,7 @@ local function teleportToRandomGenerator()
         
         if targetPart then
             local originalPosition = humanoidRootPart.CFrame -- จำตำแหน่งเดิม
-            humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(3, 10, 0) -- เทเลพอร์ตไปที่ Generator
+            humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(0, 15, 0) -- เทเลพอร์ตไปที่ Generator
         end
     else
         warn("ไม่พบ Generator ใน Map")
@@ -313,6 +349,64 @@ local Section = Tab:NewSection("🗝️Key ลัด🗝️")
 ----------------------------------- Key Code -----------------------------------
 Section:NewKeybind("⌨️🗝️Key ลัด⌨️🗝️", "ทางลัดในการ ปิด/เปิด GUI", Enum.KeyCode.K, function()
 	Library:ToggleUI()
+end)
+
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local workspace = game:GetService("Workspace")
+
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local toggleEnabled = false
+local connection = nil
+local waitingForRelease = false
+
+-- ฟังก์ชันหลักที่หมุนกล้องไปยัง Killers
+local function startCameraFollow()
+    connection = RunService.RenderStepped:Connect(function()
+        local killersFolder = workspace:FindFirstChild("Players") and workspace.Players:FindFirstChild("Killers")
+        if not killersFolder then return end
+
+        local firstKiller = killersFolder:FindFirstChildWhichIsA("Model")
+        if firstKiller and firstKiller:FindFirstChild("HumanoidRootPart") then
+            local hrp = firstKiller.HumanoidRootPart
+            Camera.CFrame = CFrame.new(Camera.CFrame.Position, hrp.Position)
+        end
+    end)
+end
+
+local function stopCameraFollow()
+    if connection then
+        connection:Disconnect()
+        connection = nil
+    end
+end
+
+-- ฟังก์ชันตอนกด Keybind (รอให้ปล่อยก่อนเปิด/ปิด)
+Section:NewKeybind("🎯ล็อกกล้องไปยัง Killers โดยใช้ Key ลัด🎯", "กด E เพื่อสลับการล็อกกล้อง", Enum.KeyCode.E, function()
+    if waitingForRelease then return end
+    waitingForRelease = true
+
+    -- รอจนกว่าจะปล่อยปุ่ม E
+    local releasedConn
+    releasedConn = UserInputService.InputEnded:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.E then
+            releasedConn:Disconnect()
+            toggleEnabled = not toggleEnabled
+
+            if toggleEnabled then
+                print("🔴 กล้องหันไปทาง Killers")
+                startCameraFollow()
+            else
+                print("⚪ ปิดการหันกล้อง")
+                stopCameraFollow()
+            end
+
+            waitingForRelease = false
+        end
+    end)
 end)
 
 Section:NewButton("🔁เข้าร่วมอีกครั้ง🔁", "ออกเกมแล้วเข้าใหม่มาในเซิฟเดิม", function()
