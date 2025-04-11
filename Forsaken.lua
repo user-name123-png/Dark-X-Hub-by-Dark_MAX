@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Forsaken⚔️")
-local Section = Tab:NewSection("🔥v1.1🔥")
+local Section = Tab:NewSection("🔥v3.0🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -33,7 +33,6 @@ Section:NewToggle("🎯Aimbot Killers🎯", "กล้องจะหันไ�
     toggleEnabled = state
 
     if toggleEnabled then
-        print("Toggle On")
 
         connection = RunService.RenderStepped:Connect(function()
             local killersFolder = workspace:FindFirstChild("Players") and workspace.Players:FindFirstChild("Killers")
@@ -47,7 +46,6 @@ Section:NewToggle("🎯Aimbot Killers🎯", "กล้องจะหันไ�
         end)
 
     else
-        print("Toggle Off")
         if connection then
             connection:Disconnect()
             connection = nil
@@ -62,9 +60,7 @@ local RunService = game:GetService("RunService")
 Section:NewToggle("🚪เปิด/ปิด เดินทะลุ🚪", "เปิดหรือปิดการเดินทะลุสิ่งของ", function(state)
     NoclipEnabled = state
     if NoclipEnabled then
-        print("Noclip เปิด")
     else
-        print("Noclip ปิด")
 
         -- คืนค่า CanCollide = true ตอนปิด noclip
         local character = player.Character
@@ -95,91 +91,119 @@ end)
 Section:NewButton("🧬สร้าง Highlight🧬", "สร้าง Highlight ทุกตัว", function()
     while task.wait() do
         local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Workspace = game:GetService("Workspace")
+        local LocalPlayer = Players.LocalPlayer
+        local Workspace = game:GetService("Workspace")
 
--- ฟังก์ชันสร้าง Highlight
-local function createHighlight(instance, color)
-    if instance:FindFirstChildOfClass("Highlight") then return end
-    local highlight = Instance.new("Highlight")
-    highlight.Adornee = instance
-    highlight.FillColor = color
-    highlight.FillTransparency = 0.5
-    highlight.OutlineColor = Color3.new(0, 0, 0)
-    highlight.OutlineTransparency = 0.1
-    highlight.Parent = instance
-end
+        -- ฟังก์ชันสร้าง Highlight (ไม่มีขอบ)
+        local function createHighlight(instance, color)
+            if instance:FindFirstChildOfClass("Highlight") then return end
+            local highlight = Instance.new("Highlight")
+            highlight.Adornee = instance
+            highlight.FillColor = color
+            highlight.FillTransparency = 0.5
+            highlight.OutlineColor = Color3.new(0, 0, 0)
+            highlight.OutlineTransparency = 1 -- ไม่มีขอบ
+            highlight.Parent = instance
+        end
 
--- ฟังก์ชันสร้าง Highlight ให้ทุกอย่าง
-local function applyAllESP()
-    -- Killers (แดง)
-    for _, obj in ipairs(Workspace.Players.Killers:GetChildren()) do
-        if obj:IsA("Model") or obj:IsA("Part") then
-            createHighlight(obj, Color3.new(1, 0, 0))
-        end
-    end
-    -- Survivors (เขียว)
-    for _, obj in ipairs(Workspace.Players.Survivors:GetChildren()) do
-        if obj:IsA("Model") or obj:IsA("Part") then
-            createHighlight(obj, Color3.new(0, 1, 0))
-        end
-    end
-    -- Spectating (ขาว)
-    for _, obj in ipairs(Workspace.Players.Spectating:GetChildren()) do
-        if obj:IsA("Model") or obj:IsA("Part") then
-            createHighlight(obj, Color3.new(1, 1, 1))
-        end
-    end
-    -- Generator (น้ำเงิน)
-    local mapPath = Workspace:FindFirstChild("Map") and Workspace.Map:FindFirstChild("Ingame") and Workspace.Map.Ingame:FindFirstChild("Map")
-    if mapPath then
-        for _, obj in ipairs(mapPath:GetDescendants()) do
-            if obj.Name == "Generator" and (obj:IsA("Model") or obj:IsA("Part")) then
-                createHighlight(obj, Color3.new(0, 0.5, 1))
+        -- ฟังก์ชันสร้าง Highlight ให้ทุกอย่าง
+        local function applyAllESP()
+            -- Killers (แดง)
+            for _, obj in ipairs(Workspace.Players.Killers:GetChildren()) do
+                if obj:IsA("Model") or obj:IsA("Part") then
+                    createHighlight(obj, Color3.new(1, 0, 0))
+                end
             end
+            -- Survivors (เขียว)
+            for _, obj in ipairs(Workspace.Players.Survivors:GetChildren()) do
+                if obj:IsA("Model") or obj:IsA("Part") then
+                    createHighlight(obj, Color3.new(0, 1, 0))
+                end
+            end
+            -- Spectating (ขาว)
+            for _, obj in ipairs(Workspace.Players.Spectating:GetChildren()) do
+                if obj:IsA("Model") or obj:IsA("Part") then
+                    createHighlight(obj, Color3.new(1, 1, 1))
+                end
+            end
+            -- Generator (น้ำเงิน)
+            local mapPath = Workspace:FindFirstChild("Map") and Workspace.Map:FindFirstChild("Ingame") and Workspace.Map.Ingame:FindFirstChild("Map")
+            if mapPath then
+                for _, obj in ipairs(mapPath:GetDescendants()) do
+                    if obj.Name == "Generator" and (obj:IsA("Model") or obj:IsA("Part")) then
+                        createHighlight(obj, Color3.new(0, 0.5, 1))
+                    end
+                end
+            end
+
+            -- BloxyCola (น้ำตาลแดง)
+            local function highlightBloxyCola(container)
+                if container then
+                    for _, obj in ipairs(container:GetDescendants()) do
+                        if obj.Name == "BloxyCola" and (obj:IsA("Model") or obj:IsA("Part")) then
+                            createHighlight(obj, Color3.fromRGB(200, 100, 50))
+                        end
+                    end
+                end
+            end
+
+            highlightBloxyCola(Workspace)
+            highlightBloxyCola(Workspace:FindFirstChild("Map") and Workspace.Map:FindFirstChild("Ingame"))
+
+            -- Medkit (ฟ้าอ่อน)
+            local function highlightMedkit(container)
+                if container then
+                    for _, obj in ipairs(container:GetDescendants()) do
+                        if obj.Name == "Medkit" and (obj:IsA("Model") or obj:IsA("Part")) then
+                            createHighlight(obj, Color3.fromRGB(100, 255, 255))
+                        end
+                    end
+                end
+            end
+
+            highlightMedkit(Workspace)
+            highlightMedkit(Workspace:FindFirstChild("Map") and Workspace.Map:FindFirstChild("Ingame"))
         end
-    end
-end
 
--- เรียกครั้งแรก
-applyAllESP()
-
--- เมื่อ Character ผู้เล่นเกิดใหม่
-LocalPlayer.CharacterAdded:Connect(function()
-    task.wait(1)
-    applyAllESP()
-end)
-
--- เมื่อมีผู้เล่นใหม่เข้ามาเกม
-Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function()
-        task.wait(1)
+        -- เรียกครั้งแรก
         applyAllESP()
-    end)
-end)
 
--- ตรวจจับว่า workspace.Map.Ingame.Map ถูกสร้างหรือถูกลบ
-local function watchMapIngame()
-    local mapIngameFolder = Workspace:WaitForChild("Map"):WaitForChild("Ingame")
-
-    mapIngameFolder.ChildAdded:Connect(function(child)
-        if child.Name == "Map" then
+        -- เมื่อ Character ผู้เล่นเกิดใหม่
+        LocalPlayer.CharacterAdded:Connect(function()
             task.wait(1)
             applyAllESP()
-        end
-    end)
+        end)
 
-    mapIngameFolder.ChildRemoved:Connect(function(child)
-        if child.Name == "Map" then
-            task.wait(1)
-            applyAllESP()
-        end
-    end)
-end
+        -- เมื่อมีผู้เล่นใหม่เข้ามาเกม
+        Players.PlayerAdded:Connect(function(player)
+            player.CharacterAdded:Connect(function()
+                task.wait(1)
+                applyAllESP()
+            end)
+        end)
 
--- เริ่มตรวจจับ
-task.spawn(watchMapIngame)
-task.wait(15)
+        -- ตรวจจับว่า workspace.Map.Ingame.Map ถูกสร้างหรือถูกลบ
+        local function watchMapIngame()
+            local mapIngameFolder = Workspace:WaitForChild("Map"):WaitForChild("Ingame")
+
+            mapIngameFolder.ChildAdded:Connect(function(child)
+                if child.Name == "Map" then
+                    task.wait(1)
+                    applyAllESP()
+                end
+            end)
+
+            mapIngameFolder.ChildRemoved:Connect(function(child)
+                if child.Name == "Map" then
+                    task.wait(1)
+                    applyAllESP()
+                end
+            end)
+        end
+
+        -- เริ่มตรวจจับ
+        task.spawn(watchMapIngame)
+        task.wait(15)
     end
 end)
 
@@ -220,7 +244,6 @@ Section:NewToggle("⚡🛡️TP ที่พัก⚡🛡️", "เปิดเ�
     teleporting = state
 
     if teleporting then
-        print("เริ่มเทเลพอร์ตไปยังที่พัก...")
         task.spawn(function()
             while teleporting do
                 local player = game.Players.LocalPlayer
@@ -234,7 +257,6 @@ Section:NewToggle("⚡🛡️TP ที่พัก⚡🛡️", "เปิดเ�
             end
         end)
     else
-        print("หยุดเทเลพอร์ต")
     end
 end)
 
@@ -329,7 +351,6 @@ Section:NewToggle("⚡🔁เปิด/ปิด TP ตลอด⚡🔁", "เ�
             task.wait()
         end
     else
-        print("❌ หยุดติดตาม Survivor")
     end
 end)
 
@@ -339,7 +360,91 @@ Section:NewButton("⚡🕹️กดเพื่อ TP⚡🕹️", "กดเพ�
     if target and target:FindFirstChild("HumanoidRootPart") then
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame
     else
-        print("❌ ไม่พบ Survivor หรือไม่มี HumanoidRootPart")
+    end
+end)
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local Camera = Workspace.CurrentCamera
+
+-- ฟังก์ชันหาผู้เล่นทั้งหมดใน workspace.Players.Killers และ Survivors
+local function getPlayerList()
+    local list = {}
+    for _, team in ipairs({"Killers", "Survivors"}) do
+        local folder = Workspace:FindFirstChild("Players") and Workspace.Players:FindFirstChild(team)
+        if folder then
+            for _, model in ipairs(folder:GetChildren()) do
+                if model:IsA("Model") and model:FindFirstChild("Humanoid") then
+                    table.insert(list, model.Name)
+                end
+            end
+        end
+    end
+    return list
+end
+
+-- เก็บชื่อที่เลือกจาก dropdown
+local PlayerTarget = nil
+
+-- Dropdown UI
+local dropdown = Section:NewDropdown("🕹️📸เลือกคนดู🕹️📸", "เลือกผู้เล่นเพื่อ View", getPlayerList(), function(selected)
+    PlayerTarget = selected
+end)
+
+-- อัปเดตรายชื่ออัตโนมัติเมื่อมีผู้เล่นเข้า/ออก
+Players.PlayerAdded:Connect(function()
+    dropdown:Refresh(getPlayerList())
+end)
+Players.PlayerRemoving:Connect(function()
+    dropdown:Refresh(getPlayerList())
+end)
+
+-- ✅ อัปเดต dropdown อัตโนมัติทุกวินาที
+task.spawn(function()
+    while true do
+        dropdown:Refresh(getPlayerList())
+        task.wait(1)
+    end
+end)
+
+-- Toggle เปิด/ปิดการดู
+local toggleState = false
+Section:NewToggle("📷เปิด/ปิด View ผู้เล่น📷", "จะสลับกล้องไปที่ผู้เล่นเป้าหมาย", function(state)
+    toggleState = state
+    if state then
+
+        task.spawn(function()
+            while toggleState do
+                local function findTargetModel()
+                    for _, team in ipairs({"Killers", "Survivors"}) do
+                        local folder = Workspace:FindFirstChild("Players") and Workspace.Players:FindFirstChild(team)
+                        if folder then
+                            for _, model in ipairs(folder:GetChildren()) do
+                                if model.Name == PlayerTarget and model:FindFirstChild("Humanoid") then
+                                    return model.Humanoid
+                                end
+                            end
+                        end
+                    end
+                    return nil
+                end
+
+                local targetHumanoid = findTargetModel()
+                if targetHumanoid then
+                    Camera.CameraSubject = targetHumanoid
+                else
+                    Camera.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+                end
+
+                task.wait()
+            end
+        end)
+
+    else
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            Camera.CameraSubject = LocalPlayer.Character.Humanoid
+        end
     end
 end)
 
@@ -397,10 +502,8 @@ Section:NewKeybind("🎯ล็อกกล้องไปยัง Killers โ�
             toggleEnabled = not toggleEnabled
 
             if toggleEnabled then
-                print("🔴 กล้องหันไปทาง Killers")
                 startCameraFollow()
             else
-                print("⚪ ปิดการหันกล้อง")
                 stopCameraFollow()
             end
 
