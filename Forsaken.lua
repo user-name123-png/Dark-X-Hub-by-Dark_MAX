@@ -320,6 +320,10 @@ local function getSurvivorList()
     return survivors
 end
 
+local Tab = Window:NewTab("🎮ผู้เล่น🎮")
+
+local Section = Tab:NewSection("🎮⚡หมวดหมู่ Player🎮⚡")
+
 -- ตัวแปรเก็บผู้เล่นที่เลือก
 local PlayerTP
 local dropdown = Section:NewDropdown("🕹️เลือก Survivors🕹️", "เลือก Survivors ที่อยาก TP ไปหา", getSurvivorList(), function(selected)
@@ -510,6 +514,37 @@ Section:NewKeybind("🎯ล็อกกล้องไปยัง Killers โ�
             waitingForRelease = false
         end
     end)
+end)
+
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+
+local holdingR = false
+local tpLoop = nil
+
+Section:NewKeybind("⚡TP ไปตำแหน่งเมาส์⚡", "กด R เพื่อนเทเลพอร์ตไปที่ตำแหน่งเมาส์", Enum.KeyCode.R, function()
+    -- ตรวจจับเมื่อกดปุ่ม R ลง
+    holdingR = true
+
+    -- เริ่มลูปเทเลพอร์ต
+    tpLoop = task.spawn(function()
+        while holdingR do
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local targetPosition = Mouse.Hit.Position
+                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(targetPosition + Vector3.new(0, 3, 0)) -- ลอยขึ้นเล็กน้อย
+            end
+            task.wait(60)
+        end
+    end)
+end)
+
+-- ตรวจจับเมื่อปล่อยปุ่ม R
+UserInputService.InputEnded:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode.R then
+        holdingR = false
+    end
 end)
 
 Section:NewButton("🔁เข้าร่วมอีกครั้ง🔁", "ออกเกมแล้วเข้าใหม่มาในเซิฟเดิม", function()
