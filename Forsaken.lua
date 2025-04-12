@@ -1,10 +1,33 @@
+local uis = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+
+local function jumpOnce()
+	local char = player.Character or player.CharacterAdded:Wait()
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if not hrp or not hum then return end
+
+	-- เช็กว่ามีพื้นรองอยู่
+	if hum.FloorMaterial ~= Enum.Material.Air then
+		-- กระโดด 1 ที
+		hrp.AssemblyLinearVelocity = Vector3.new(hrp.AssemblyLinearVelocity.X, 60, hrp.AssemblyLinearVelocity.Z)
+	end
+end
+
+uis.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.Space then
+		jumpOnce()
+	end
+end)
+
 --GUI Forsaken
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠🐓🗡️", "DarkTheme")
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Forsaken⚔️")
-local Section = Tab:NewSection("🔥v3.0🔥")
+local Section = Tab:NewSection("🔥v4.1🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -320,6 +343,25 @@ local function getSurvivorList()
     return survivors
 end
 
+local Section = Tab:NewSection("⚙️🔄️Auto⚙️🔄️")
+
+local Number = 0
+
+Section:NewButton("⚡⚙️⚡Auto ปั่นไฟ⚡⚙️⚡", "ปั่นไฟให้อัตโนมัติ", function()
+while Number < 4 do
+local map = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+
+for _, obj in ipairs(map:GetDescendants()) do
+	if obj.Name == "RE" and obj:IsA("RemoteEvent") then
+		obj:FireServer()
+	end
+end
+Number += 1
+task.wait(1.5)
+end
+Number = 0
+end)
+
 local Tab = Window:NewTab("🎮ผู้เล่น🎮")
 
 local Section = Tab:NewSection("🎮⚡หมวดหมู่ Player🎮⚡")
@@ -545,6 +587,44 @@ UserInputService.InputEnded:Connect(function(input, gameProcessed)
     if input.KeyCode == Enum.KeyCode.R then
         holdingR = false
     end
+end)
+
+local UserInputService = game:GetService("UserInputService")
+
+local isTHeld = false
+
+local function autoSpin()
+	local Number = 0
+	while Number < 4 do
+		local map = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+		for _, obj in ipairs(map:GetDescendants()) do
+			if obj.Name == "RE" and obj:IsA("RemoteEvent") then
+				obj:FireServer()
+			end
+		end
+		Number += 1
+		task.wait(1.5)
+	end
+end
+
+-- กำหนด Keybind UI
+Section:NewKeybind("⚙️ปั่นไฟเมื่อปล่อย T⚙️", "กด T ค้างไว้แล้วปล่อยเพื่อปั่นไฟ", Enum.KeyCode.T, function()
+	-- ตรงนี้ปล่อยว่างไว้ เพราะเราจะจัดการแยกด้วย UserInputService
+end)
+
+-- จับตอนกด T
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if input.KeyCode == Enum.KeyCode.T and not gameProcessed then
+		isTHeld = true
+	end
+end)
+
+-- จับตอนปล่อย T
+UserInputService.InputEnded:Connect(function(input, gameProcessed)
+	if input.KeyCode == Enum.KeyCode.T and not gameProcessed and isTHeld then
+		isTHeld = false
+		autoSpin()
+	end
 end)
 
 Section:NewButton("🔁เข้าร่วมอีกครั้ง🔁", "ออกเกมแล้วเข้าใหม่มาในเซิฟเดิม", function()
