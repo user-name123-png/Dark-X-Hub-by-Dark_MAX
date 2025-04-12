@@ -1,25 +1,25 @@
-local uis = game:GetService("UserInputService")
-local player = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
-local function jumpOnce()
-	local char = player.Character or player.CharacterAdded:Wait()
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local hum = char:FindFirstChildOfClass("Humanoid")
-	if not hrp or not hum then return end
-
-	-- เช็กว่ามีพื้นรองอยู่
-	if hum.FloorMaterial ~= Enum.Material.Air then
-		-- กระโดด 1 ที
-		hrp.AssemblyLinearVelocity = Vector3.new(hrp.AssemblyLinearVelocity.X, 60, hrp.AssemblyLinearVelocity.Z)
+-- ฟังก์ชันตั้งค่า JumpPower
+local function setJumpPower()
+	local char = LocalPlayer.Character
+	if char and char:FindFirstChildOfClass("Humanoid") then
+		char:FindFirstChildOfClass("Humanoid").UseJumpPower = true
+		char:FindFirstChildOfClass("Humanoid").JumpPower = 60 -- ปรับค่าตรงนี้ได้
 	end
 end
 
-uis.InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	if input.KeyCode == Enum.KeyCode.Space then
-		jumpOnce()
-	end
+-- รอจนกระทั่งตัวละครถูกโหลด แล้วค่อยเซ็ต jump
+LocalPlayer.CharacterAdded:Connect(function()
+	wait(1) -- รอเล็กน้อยเพื่อให้ Humanoid โหลดเสร็จ
+	setJumpPower()
 end)
+
+-- ถ้ามีตัวละครอยู่แล้วก็เซ็ตเลย
+if LocalPlayer.Character then
+	setJumpPower()
+end
 
 --GUI Forsaken
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
@@ -27,7 +27,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Forsaken⚔️")
-local Section = Tab:NewSection("🔥v4.1🔥")
+local Section = Tab:NewSection("🔥v4.2🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
