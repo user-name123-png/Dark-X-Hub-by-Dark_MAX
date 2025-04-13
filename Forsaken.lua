@@ -27,7 +27,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Forsaken⚔️")
-local Section = Tab:NewSection("🔥v4.2🔥")
+local Section = Tab:NewSection("🔥v1.4.3🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -386,13 +386,11 @@ local toggleState = false
 Section:NewToggle("⚡🔁เปิด/ปิด TP ตลอด⚡🔁", "เปิด/ปิด TP ไปหา Survivors ที่เลือก", function(state)
     toggleState = state
     if toggleState then
-        print("✅ เริ่มติดตาม Survivor")
         while toggleState do
             local target = workspace.Players.Survivors:FindFirstChild(PlayerTP)
             if target and target:FindFirstChild("HumanoidRootPart") then
                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame
             else
-                print("❌ ไม่พบ Survivor หรือไม่มี HumanoidRootPart")
             end
             task.wait()
         end
@@ -625,6 +623,61 @@ UserInputService.InputEnded:Connect(function(input, gameProcessed)
 		isTHeld = false
 		autoSpin()
 	end
+end)
+
+local UserInputService = game:GetService("UserInputService")
+local debounce = false
+
+local function teleportToRandomGenerator()
+    if debounce then return end
+    debounce = true
+
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    local mapFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+
+    local generators = {}
+
+    -- รวบรวม Generator
+    for _, obj in ipairs(mapFolder:GetChildren()) do
+        if obj.Name == "Generator" and (obj:IsA("Model") or obj:IsA("Part")) then
+            table.insert(generators, obj)
+        end
+    end
+
+    if #generators > 0 then
+        local randomGenerator = generators[math.random(1, #generators)]
+        local targetPart
+
+        if randomGenerator:IsA("Model") then
+            targetPart = randomGenerator.PrimaryPart or randomGenerator:FindFirstChildWhichIsA("BasePart")
+        elseif randomGenerator:IsA("BasePart") then
+            targetPart = randomGenerator
+        end
+
+        if targetPart then
+            humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(0, 15, 0)
+        end
+    else
+        warn("ไม่พบ Generator ใน Map")
+    end
+
+    task.wait(0.5)
+    debounce = false
+end
+
+-- เชื่อมกับ Keybind T
+Section:NewKeybind("⚡⚙️TP ที่ Generator⚡⚙️", "TP ไปที่ Generator แบบสุ่ม", Enum.KeyCode.H, function()
+    -- จะทำงานเมื่อ "กดปุ่ม"
+    -- รอจนปล่อยก่อนค่อยรัน TP
+    local connection
+    connection = UserInputService.InputEnded:Connect(function(input, gameProcessed)
+        if input.KeyCode == Enum.KeyCode.H then
+            teleportToRandomGenerator()
+            connection:Disconnect()
+        end
+    end)
 end)
 
 Section:NewButton("🔁เข้าร่วมอีกครั้ง🔁", "ออกเกมแล้วเข้าใหม่มาในเซิฟเดิม", function()
