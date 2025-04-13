@@ -6,7 +6,7 @@ local function setJumpPower()
 	local char = LocalPlayer.Character
 	if char and char:FindFirstChildOfClass("Humanoid") then
 		char:FindFirstChildOfClass("Humanoid").UseJumpPower = true
-		char:FindFirstChildOfClass("Humanoid").JumpPower = 65 -- ปรับค่าตรงนี้ได้
+		char:FindFirstChildOfClass("Humanoid").JumpPower = 50 -- ปรับค่าตรงนี้ได้
 	end
 end
 
