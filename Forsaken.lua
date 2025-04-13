@@ -6,7 +6,7 @@ local function setJumpPower()
 	local char = LocalPlayer.Character
 	if char and char:FindFirstChildOfClass("Humanoid") then
 		char:FindFirstChildOfClass("Humanoid").UseJumpPower = true
-		char:FindFirstChildOfClass("Humanoid").JumpPower = 60 -- ปรับค่าตรงนี้ได้
+		char:FindFirstChildOfClass("Humanoid").JumpPower = 65 -- ปรับค่าตรงนี้ได้
 	end
 end
 
@@ -27,7 +27,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Forsaken⚔️")
-local Section = Tab:NewSection("🔥v1.4.3🔥")
+local Section = Tab:NewSection("🔥v0.5.4🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -273,7 +273,7 @@ Section:NewToggle("⚡🛡️TP ที่พัก⚡🛡️", "เปิดเ�
                 local character = player.Character or player.CharacterAdded:Wait()
                 local hrp = character:WaitForChild("HumanoidRootPart")
 
-                local targetPosition = Vector3.new(-3433, 9, 272)
+                local targetPosition = Vector3.new(-3580, 4, 211)
                 hrp.CFrame = CFrame.new(targetPosition)
 
                 task.wait() -- ปรับความถี่ในการเทเลพอร์ต (เช่น ทุกๆ 1 วินาที)
@@ -489,6 +489,54 @@ Section:NewToggle("📷เปิด/ปิด View ผู้เล่น📷", "
         if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
             Camera.CameraSubject = LocalPlayer.Character.Humanoid
         end
+    end
+end)
+
+local Section = Tab:NewSection("🔴ปรับ Humanoid🔴")
+
+local currentSpeed = 16 -- ค่าที่ตั้งจาก Slider
+local speedEnabled = false -- toggle เปิด/ปิดความเร็ว
+
+-- ฟังก์ชันตั้งค่า BaseSpeed
+local function applySpeedToHumanoid(humanoid)
+    if speedEnabled then
+        humanoid:SetAttribute("BaseSpeed", currentSpeed)
+    else
+        humanoid:SetAttribute("BaseSpeed", 16)
+    end
+end
+
+-- สร้าง Slider ปรับ BaseSpeed
+Section:NewSlider("👟📉ความเร็วเดิน👟📈", "ปรับความเร็วการเดิน", 37, 16, function(s)
+    currentSpeed = s
+
+    if speedEnabled then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            applySpeedToHumanoid(humanoid)
+        end
+    end
+end)
+
+-- Toggle เปิด/ปิดความเร็ว
+Section:NewToggle("👟เปิด/ปิด ความเร็วเดิน👟", "เปิด/ปิด การปรับความเร็วการเดิน", function(state)
+    speedEnabled = state
+
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        applySpeedToHumanoid(humanoid)
+    end
+end)
+
+-- เวลาตัวละครผู้เล่นเกิดใหม่
+game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    if humanoid then
+        applySpeedToHumanoid(humanoid)
     end
 end)
 
