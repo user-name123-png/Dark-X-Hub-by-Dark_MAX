@@ -1,9 +1,31 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+
+RunService.Stepped:Connect(function()
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid and humanoid.WalkSpeed < 16 then
+            humanoid.WalkSpeed = 16
+        end
+    end
+end)
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+humanoid:SetAttribute("BaseSpeed", 16)
+--------------------------------------------------------------------------------------
 -- GUI
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡️", "DarkTheme")
 ----------------------------------- SUBSCRIDE -----------------------------------
 local Tab = Window:NewTab("🖐️Welcome🖐️")
-local Section = Tab:NewSection("🔥v1.2🔥")
+local Section = Tab:NewSection("⚔️Deat Rails⚔️")
+local Section = Tab:NewSection("🔥v0.2.6🔥")
 local Section = Tab:NewSection("📌Subscride📌")
 Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -17,7 +39,6 @@ end)
 local Tab = Window:NewTab("🛡️MENU🛡️")
 -- Basic
 local Section = Tab:NewSection("🐓Basic🐓")
-
 ----------------------------------- Auto Storage -----------------------------------
 local range = 100 -- ระยะเก็บไอเทม (เมตร)
 --ระยะดึง
@@ -195,6 +216,42 @@ Section:NewToggle("🧬X-Ray🧬", "See through", function(state)
     elseif state == false then
         print("🧬X-Ray🧬(close)")
     end
+end)
+--------------------------------------------------------------------------------------
+Section:NewButton("🕒ดูเวลา🕒", "เวลาในนาฬิกาบนรถไฟ", function()
+    local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+-- สร้าง ScreenGui และ TextLabel
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TimeDisplayGUI"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Name = "TimeText"
+textLabel.Size = UDim2.new(0, 200, 0, 50)
+textLabel.Position = UDim2.new(1, -210, 1, -60) -- มุมขวาล่าง
+textLabel.AnchorPoint = Vector2.new(0, 0)
+textLabel.BackgroundTransparency = 0.5
+textLabel.BackgroundColor3 = Color3.new(0, 0, 0)
+textLabel.TextColor3 = Color3.new(1, 1, 1)
+textLabel.TextScaled = true
+textLabel.Font = Enum.Font.SourceSans
+textLabel.Parent = screenGui
+
+-- อัปเดตข้อความทุกเฟรม
+RunService.RenderStepped:Connect(function()
+	local success, timeText = pcall(function()
+		return workspace.Train.TrainControls.TimeDial.SurfaceGui.TextLabel.Text
+	end)
+
+	if success then
+		textLabel.Text = timeText
+	else
+		textLabel.Text = "Loading..."
+	end
+end)
 end)
 ----------------------------------- VISUAL EFFECTS -----------------------------------
 local Tab = Window:NewTab("🌏VISUAL EFFECTS🌏")
