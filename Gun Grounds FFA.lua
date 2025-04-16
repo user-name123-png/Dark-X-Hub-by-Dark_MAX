@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Gun Grounds FFA⚔️")
-local Section = Tab:NewSection("🔥v0.1.0🔥")
+local Section = Tab:NewSection("🔥v0.1.4🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -212,77 +212,76 @@ for _, player in pairs(Players:GetPlayers()) do
 		addBillboard(player)
 	end)
 end
-
-local Players = game:GetService("Players")
+end)
+-------------------------------------------------------------------------------
+Section:NewButton("🧬มองทะลุ🧬", "EPS กับ Player ทุกคน", function()
+    local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
 -- Function สำหรับการแสดงชื่อและระยะ
 local function addBillboard(player)
-    -- รอให้ตัวละครโหลด
-    local character = player.Character or player.CharacterAdded:Wait()
-    local head = character:WaitForChild("Head")
+    task.spawn(function()
+        local character = player.Character or player.CharacterAdded:Wait()
 
-    -- ตรวจสอบว่า NameTag มีอยู่แล้วหรือไม่ ถ้ามีแล้วให้ลบทิ้งก่อน
-    if head:FindFirstChild("NameTag") then
-        head:FindFirstChild("NameTag"):Destroy()
-    end
+        -- รอจนกว่าจะมี Head จริง ๆ
+        local head = character:WaitForChild("Head", 5)
+        if not head then return end
 
-    -- สร้าง BillboardGui
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "NameTag"
-    billboard.Adornee = head
-    billboard.Size = UDim2.new(0, 150, 0, 40) -- ขนาดเพิ่มขึ้นเล็กน้อย (150x40)
-    billboard.StudsOffset = Vector3.new(0, 3, 0)
-    billboard.AlwaysOnTop = true
-    billboard.MaxDistance = math.huge
-
-    -- สร้าง TextLabel สำหรับแสดงชื่อและระยะ
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Parent = billboard
-    textLabel.Size = UDim2.new(1, 0, 1, 0)
-    textLabel.BackgroundTransparency = 1
-    textLabel.TextColor3 = Color3.new(1, 1, 1) -- สีขาว
-    textLabel.TextStrokeTransparency = 0.5 -- เส้นขอบตัวอักษร
-    textLabel.TextStrokeColor3 = Color3.new(0, 0, 0) -- เส้นขอบสีดำ
-    textLabel.TextScaled = true
-    textLabel.Font = Enum.Font.GothamBold
-
-    -- ใส่ BillboardGui ใน Head
-    billboard.Parent = head
-
-    -- ฟังก์ชันอัปเดตข้อความแสดงระยะ
-    local function updateDistance()
-        local localPlayer = Players.LocalPlayer
-        if localPlayer and localPlayer.Character and localPlayer.Character:FindFirstChild("Head") then
-            local localHead = localPlayer.Character.Head
-            local distance = (head.Position - localHead.Position).Magnitude
-            textLabel.Text = string.format("%s\n%.2f m", player.Name, distance)
-        else
-            textLabel.Text = player.Name
+        -- ตรวจสอบว่า NameTag มีอยู่แล้วหรือไม่ ถ้ามีแล้วให้ลบทิ้งก่อน
+        if head:FindFirstChild("NameTag") then
+            head:FindFirstChild("NameTag"):Destroy()
         end
-    end
 
-    -- อัปเดตระยะเป็นระยะ ๆ
-    game:GetService("RunService").RenderStepped:Connect(updateDistance)
+        -- สร้าง BillboardGui
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "NameTag"
+        billboard.Adornee = head
+        billboard.Size = UDim2.new(0, 150, 0, 40)
+        billboard.StudsOffset = Vector3.new(0, 3, 0)
+        billboard.AlwaysOnTop = true
+        billboard.MaxDistance = math.huge
+
+        -- สร้าง TextLabel สำหรับแสดงชื่อและระยะ
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Parent = billboard
+        textLabel.Size = UDim2.new(1, 0, 1, 0)
+        textLabel.BackgroundTransparency = 1
+        textLabel.TextColor3 = Color3.new(1, 1, 1)
+        textLabel.TextStrokeTransparency = 0.5
+        textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+        textLabel.TextScaled = true
+        textLabel.Font = Enum.Font.GothamBold
+
+        billboard.Parent = head
+
+        -- อัปเดตระยะ
+        RunService.RenderStepped:Connect(function()
+            local localPlayer = Players.LocalPlayer
+            if localPlayer.Character and localPlayer.Character:FindFirstChild("Head") then
+                local distance = (head.Position - localPlayer.Character.Head.Position).Magnitude
+                textLabel.Text = string.format("%s\n%.2f m", player.Name, distance)
+            end
+        end)
+    end)
 end
 
--- เมื่อผู้เล่นถูกเพิ่มเข้ามาในเกม
-Players.PlayerAdded:Connect(function(player)
-    -- เมื่อ Character ถูกสร้างขึ้น
-    player.CharacterAdded:Connect(function()
-        addBillboard(player)
-    end)
-end)
-
--- สำหรับผู้เล่นที่อยู่ในเกมแล้ว
-for _, player in pairs(Players:GetPlayers()) do
+-- เช็ค Character ทั้งใหม่และที่มีอยู่
+local function setupPlayer(player)
     if player.Character then
         addBillboard(player)
     end
-    -- รองรับกรณีที่ตัวละครของผู้เล่นยังไม่ถูกสร้าง
     player.CharacterAdded:Connect(function()
         addBillboard(player)
     end)
 end
+
+-- สำหรับผู้เล่นที่อยู่แล้ว
+for _, player in ipairs(Players:GetPlayers()) do
+    setupPlayer(player)
+end
+
+-- สำหรับผู้เล่นใหม่
+Players.PlayerAdded:Connect(setupPlayer)
 end)
 -------------------------------------------------------------------------------
 local Tab = Window:NewTab("⚙️การตั้งค่า⚙️")
