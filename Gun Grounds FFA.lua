@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Gun Grounds FFA⚔️")
-local Section = Tab:NewSection("🔥v0.2.3🔥")
+local Section = Tab:NewSection("🔥v0.2.4🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -292,11 +292,11 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local defaultWalkSpeed = 28
-local currentWalkSpeed = 65 -- ค่าเริ่มต้นของ slider
+local currentWalkSpeed = 50 -- ค่าเริ่มต้นของ slider
 local walkSpeedEnabled = false
 
 -- เมื่อ Slider ถูกปรับ
-Section:NewSlider("👟📉ความเร็วการเดิน👟📈", "ปรับความเร็วการเดิน", 65, 28, function(s)
+Section:NewSlider("👟📉ความเร็วการเดิน👟📈", "ปรับความเร็วการเดิน", 50, 28, function(s)
     currentWalkSpeed = s
     if walkSpeedEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
         LocalPlayer.Character.Humanoid.WalkSpeed = currentWalkSpeed
