@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Gun Grounds FFA⚔️")
-local Section = Tab:NewSection("🔥v0.1.4🔥")
+local Section = Tab:NewSection("🔥v0.2.2🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -282,6 +282,45 @@ end
 
 -- สำหรับผู้เล่นใหม่
 Players.PlayerAdded:Connect(setupPlayer)
+end)
+-------------------------------------------------------------------------------
+local Tab = Window:NewTab("🎮Players🎮")
+--
+local Section = Tab:NewSection("🦴ปรับ Humanoid🦴")
+-------------------------------------------------------------------------------
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local defaultWalkSpeed = 28
+local currentWalkSpeed = 67 -- ค่าเริ่มต้นของ slider
+local walkSpeedEnabled = false
+
+-- เมื่อ Slider ถูกปรับ
+Section:NewSlider("👟📉ความเร็วการเดิน👟📈", "ปรับความเร็วการเดิน", 67, 28, function(s)
+    currentWalkSpeed = s
+    if walkSpeedEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = currentWalkSpeed
+    end
+end)
+
+-- Toggle เปิด/ปิด WalkSpeed
+Section:NewToggle("👟ปิด/เปิดความเร็วเดิน👟", "ปิด/เปิดการปรับความเร็วการเดิน", function(state)
+    walkSpeedEnabled = state
+    local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = state and currentWalkSpeed or defaultWalkSpeed
+    end
+end)
+
+-- ถ้าเกิดใหม่ ให้เซ็ต WalkSpeed ตาม toggle
+LocalPlayer.CharacterAdded:Connect(function(character)
+    character:WaitForChild("Humanoid") -- รอ Humanoid
+    task.wait(0.1) -- รออีกนิดให้แน่ใจว่าทุกอย่างโหลดเสร็จ
+    if walkSpeedEnabled then
+        character.Humanoid.WalkSpeed = currentWalkSpeed
+    else
+        character.Humanoid.WalkSpeed = defaultWalkSpeed
+    end
 end)
 -------------------------------------------------------------------------------
 local Tab = Window:NewTab("⚙️การตั้งค่า⚙️")
