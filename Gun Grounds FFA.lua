@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Gun Grounds FFA⚔️")
-local Section = Tab:NewSection("🔥v0.3.1🔥")
+local Section = Tab:NewSection("🔥v0.4.2🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -17,10 +17,11 @@ end)
 
 local Tab = Window:NewTab("🛡️เมนู🛡️")
 -- Basic
-local Section = Tab:NewSection("🐓🧬ตัวช่วยเพิ่มเติม🐓🧬")
+local Section = Tab:NewSection("🐓🎯Aimbot🐓🎯")
 -----------------------------------------------------------------------------------
 -- ค่ารัศมีเริ่มต้น
 local RADIUS = 200
+local lockPartName = "HumanoidRootPart" -- ค่าเริ่มต้นจุดล็อก
 
 -- วาดวงกลมไว้ตั้งแต่ต้น
 local circle = Drawing.new("Circle")
@@ -30,13 +31,27 @@ circle.Thickness = 1
 circle.Visible = true
 circle.Filled = false
 
--- 🔼 Slider อยู่ด้านบน
+-- 🔼 Slider สำหรับระยะล็อก
 Section:NewSlider("🎯📉ระยะล็อกเป้า🎯📈", "ระยะวงกลม Aimbot (px)", 1000, 200, function(s)
 	RADIUS = s
 	circle.Radius = RADIUS
 end)
 
--- 🔽 ปุ่ม Aimbot อยู่ด้านล่าง
+-- 🔽 Dropdown เลือกตำแหน่งล็อก
+Section:NewDropdown("🔴จุดล็อก🔴", "เลือกว่าจะล็อกไปที่ส่วนไหนของศัตรู", {
+    "Head",
+    "Torso",
+    "UpperTorso",
+    "HumanoidRootPart",
+    "Left Leg",
+    "Right Leg",
+    "Left Arm",
+    "Right Arm"
+}, function(selected)
+    lockPartName = selected
+end)
+
+-- 🔽 ปุ่มเปิด Aimbot
 Section:NewButton("🎯Aimbot🎯", "Aimbot โดยการกดคลิกขวา", function()
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
@@ -62,9 +77,9 @@ Section:NewButton("🎯Aimbot🎯", "Aimbot โดยการกดคลิก
         local closestDistance = math.huge
 
         local function checkEntity(entity)
-            if entity:IsA("Model") and entity:FindFirstChild("HumanoidRootPart") then
-                local hrp = entity.HumanoidRootPart
-                local onScreen, screenPos = isOnScreen(hrp.Position)
+            if entity:IsA("Model") and entity:FindFirstChild(lockPartName) then
+                local part = entity[lockPartName]
+                local onScreen, screenPos = isOnScreen(part.Position)
                 if onScreen then
                     local distance = (Vector2.new(Mouse.X, Mouse.Y) - screenPos).Magnitude
                     if distance <= RADIUS and distance < closestDistance then
@@ -135,7 +150,7 @@ Section:NewButton("🎯Aimbot🎯", "Aimbot โดยการกดคลิก
         if input.UserInputType == Enum.UserInputType.MouseButton2 then
             holdingRightClick = true
             local target = getClosestTarget()
-            if target and target:FindFirstChild("HumanoidRootPart") then
+            if target and target:FindFirstChild(lockPartName) then
                 lockedTarget = target
             end
         end
@@ -149,11 +164,12 @@ Section:NewButton("🎯Aimbot🎯", "Aimbot โดยการกดคลิก
     end)
 
     RunService.RenderStepped:Connect(function()
-        if lockedTarget and lockedTarget:FindFirstChild("HumanoidRootPart") then
+        if lockedTarget and lockedTarget:FindFirstChild(lockPartName) then
             local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
             if hrp then
-                hrp.CFrame = CFrame.new(hrp.Position, Vector3.new(lockedTarget.HumanoidRootPart.Position.X, hrp.Position.Y, lockedTarget.HumanoidRootPart.Position.Z))
-                Workspace.CurrentCamera.CFrame = CFrame.new(Workspace.CurrentCamera.CFrame.Position, lockedTarget.HumanoidRootPart.Position)
+                local targetPart = lockedTarget[lockPartName]
+                hrp.CFrame = CFrame.new(hrp.Position, Vector3.new(targetPart.Position.X, hrp.Position.Y, targetPart.Position.Z))
+                Workspace.CurrentCamera.CFrame = CFrame.new(Workspace.CurrentCamera.CFrame.Position, targetPart.Position)
             end
         end
     end)
@@ -215,6 +231,8 @@ Section:NewButton("🎯Aimbot🎯", "Aimbot โดยการกดคลิก
         end)
     end
 end)
+-------------------------------------------------------------------------------
+local Section = Tab:NewSection("🧬ตัวช่วยเพิ่มเติม🧬")
 -------------------------------------------------------------------------------
 Section:NewButton("🧬มองทะลุ🧬", "EPS กับ Player ทุกคน", function()
     local Players = game:GetService("Players")
