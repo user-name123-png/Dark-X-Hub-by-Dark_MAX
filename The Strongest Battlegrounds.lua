@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️The Strongest Battlegrounds⚔️")
-local Section = Tab:NewSection("🔥v0.2.1🔥")
+local Section = Tab:NewSection("🔥v0.3.1🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -154,6 +154,53 @@ Section:NewButton("⚡🕹️กดเพื่อ TP⚡🕹️", "กดเพ�
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
     else
         print("❌ ไม่พบผู้เล่น หรือผู้เล่นออกจากเกมไปแล้ว")
+    end
+end)
+
+local Section = Tab:NewSection("🦴ปรับ Humanoid🦴")
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local loopEnabled = false
+local currentWalkSpeed = 25 -- ค่าเริ่มต้นของ Slider
+local defaultWalkSpeed = 25
+
+-- สร้าง Slider ปรับความเร็ว
+Section:NewSlider("👟📉ความเร็วการเดิน👟📈", "ปรับความเร็วการเดิน", 100, 25, function(value)
+    currentWalkSpeed = value
+end)
+
+-- Toggle เปิด/ปิด Loop ปรับ WalkSpeed
+Section:NewToggle("👟ปิด/เปิดความเร็วเดิน👟", "ปิด/เปิดการปรับความเร็วการเดิน", function(state)
+    loopEnabled = state
+
+    if loopEnabled then
+        task.spawn(function()
+            while loopEnabled do
+                local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+                if humanoid then
+                    humanoid.WalkSpeed = currentWalkSpeed
+                end
+                task.wait() -- ปรับทุก 0.5 วินาที
+            end
+        end)
+    else
+        local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = defaultWalkSpeed
+        end
+    end
+end)
+
+-- หากตัวละครเกิดใหม่ให้ตั้ง WalkSpeed ใหม่ตาม toggle
+LocalPlayer.CharacterAdded:Connect(function(character)
+    character:WaitForChild("Humanoid")
+    task.wait(0.1)
+    if loopEnabled then
+        character.Humanoid.WalkSpeed = currentWalkSpeed
+    else
+        character.Humanoid.WalkSpeed = defaultWalkSpeed
     end
 end)
 
