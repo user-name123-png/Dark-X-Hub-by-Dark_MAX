@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️The Strongest Battlegrounds⚔️")
-local Section = Tab:NewSection("🔥v1.3🔥")
+local Section = Tab:NewSection("🔥v0.2.1🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -96,7 +96,7 @@ Section:NewKeybind("⚡🕹️Y+555⚡🕹️", "เพิ่มตำแหน�
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
     
     -- เพิ่มค่า Y ขึ้น 114 หน่วย
-    humanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 114, 0)
+    humanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 300, 0)
 end)
 
 local Tab = Window:NewTab("🎮ผู้เล่น🎮")
@@ -305,6 +305,77 @@ player.CharacterAdded:Connect(function()
     wait(1) -- รอให้ตัวละครโหลด
     loadScript()
 end)
+end)
+
+Section:NewButton("✊🏴‍☠️อันติไซตามะ✊🏴‍☠️", "สร้าง Highlight กับคนที่เปิดอันติไซตามะสกิล 1", function()
+    local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- ฟังก์ชันสร้าง Highlight สีแดง
+local function createRedHighlight(character)
+    -- ถ้ามีอยู่แล้วและเป็นสีแดง ไม่ต้องสร้างใหม่
+    local existing = character:FindFirstChildOfClass("Highlight")
+    if existing and existing.FillColor == Color3.new(1, 0, 0) then return end
+
+    -- ลบ Highlight อื่น ๆ ที่อาจมีอยู่ก่อน
+    if existing then existing:Destroy() end
+
+    local highlight = Instance.new("Highlight")
+    highlight.FillColor = Color3.new(1, 0, 0)
+    highlight.FillTransparency = 0.5
+    highlight.OutlineTransparency = 1 -- ไม่มีขอบ
+    highlight.Adornee = character
+    highlight.Parent = character
+end
+
+-- ฟังก์ชันลบ Highlight ถ้าไม่มี Counter
+local function removeRedHighlight(character)
+    local existing = character:FindFirstChildOfClass("Highlight")
+    if existing and existing.FillColor == Color3.new(1, 0, 0) then
+        existing:Destroy()
+    end
+end
+
+-- ฟังก์ชันหลักสำหรับตรวจสอบผู้เล่น
+local function checkCharacter(character)
+    if character:FindFirstChild("Counter") then
+        createRedHighlight(character)
+    else
+        removeRedHighlight(character)
+    end
+end
+
+-- เช็คตัวละครของผู้เล่นที่เข้ามาใหม่หรือตาย
+local function setupPlayer(player)
+    local function onCharacterAdded(char)
+        checkCharacter(char)
+
+        -- ติดตามการเปลี่ยนแปลงใน character (เช่นเพิ่มหรือลบ Counter)
+        char.ChildAdded:Connect(function(child)
+            if child.Name == "Counter" then
+                createRedHighlight(char)
+            end
+        end)
+        char.ChildRemoved:Connect(function(child)
+            if child.Name == "Counter" then
+                removeRedHighlight(char)
+            end
+        end)
+    end
+
+    if player.Character then
+        onCharacterAdded(player.Character)
+    end
+    player.CharacterAdded:Connect(onCharacterAdded)
+end
+
+-- ตั้งค่าผู้เล่นปัจจุบัน
+for _, player in ipairs(Players:GetPlayers()) do
+    setupPlayer(player)
+end
+
+-- รองรับผู้เล่นที่เข้าใหม่
+Players.PlayerAdded:Connect(setupPlayer)
 end)
 
 local Tab = Window:NewTab("⚙️การตั้งค่า⚙️")
