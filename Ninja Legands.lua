@@ -1,10 +1,10 @@
 --GUI ninja legands
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡️", "DarkTheme")
+local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡️", getgenv().Configuration.Themes)
 
 local Tab = Window:NewTab("🏠MAIN🏠")
 local Section = Tab:NewSection("⚔️Ninja Legands⚔️")
-local Section = Tab:NewSection("🔥v1.1🔥")
+local Section = Tab:NewSection("🔥v0.1.1🔥")
 local Section = Tab:NewSection("📌Subscride📌")
 Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
