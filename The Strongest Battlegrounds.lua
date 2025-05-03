@@ -1,10 +1,29 @@
 --GUI The Strongest Battlegrounds
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local LocalPlayer = Players.LocalPlayer
+
+RunService.Heartbeat:Connect(function()
+    local character = LocalPlayer.Character
+    if character and character:FindFirstChild("HumanoidRootPart") and character:FindFirstChild("Humanoid") then
+        local hrp = character.HumanoidRootPart
+        if hrp.Position.Y < -485 then
+            local currentX = hrp.Position.X
+            local currentZ = hrp.Position.Z
+            print("ตกจากแมพ! กำลังย้ายไปที่ Y = -550")
+            hrp.Velocity = Vector3.zero
+            hrp.CFrame = CFrame.new(currentX, -485, currentZ)
+        end
+    end
+end)
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠🐓🗡️", "DarkTheme")
+local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠🐓🗡️", getgenv().Configuration.Themes)
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️The Strongest Battlegrounds⚔️")
-local Section = Tab:NewSection("🔥v0.3.1🔥")
+local Section = Tab:NewSection("🔥v0.4.1🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -85,7 +104,7 @@ local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 local originalPosition = humanoidRootPart.CFrame -- จำตำแหน่งเดิม
 
-humanoidRootPart.CFrame = CFrame.new(-27529, 50654, -38183)
+humanoidRootPart.CFrame = CFrame.new(-27529, -485, -38183)
 task.wait(2)
 humanoidRootPart.CFrame = originalPosition
 end)
