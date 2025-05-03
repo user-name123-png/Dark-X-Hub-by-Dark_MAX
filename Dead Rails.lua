@@ -21,7 +21,7 @@ humanoid:SetAttribute("BaseSpeed", 16)
 --------------------------------------------------------------------------------------
 -- GUI
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡️", "DarkTheme")
+local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡️", getgenv().Configuration.Themes)
 ----------------------------------- SUBSCRIDE -----------------------------------
 local Tab = Window:NewTab("🖐️Welcome🖐️")
 local Section = Tab:NewSection("⚔️Deat Rails⚔️")
