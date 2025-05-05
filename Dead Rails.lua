@@ -25,7 +25,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡�
 ----------------------------------- SUBSCRIDE -----------------------------------
 local Tab = Window:NewTab("🖐️Welcome🖐️")
 local Section = Tab:NewSection("⚔️Deat Rails⚔️")
-local Section = Tab:NewSection("🔥v0.2.4🔥")
+local Section = Tab:NewSection("🔥v0.1.2🔥")
 local Section = Tab:NewSection("📌Subscride📌")
 Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -120,16 +120,12 @@ local players = game:GetService("Players")
 local function addHighlightEffect(item)
     if not ESPEnabled then return end -- หยุดทำงานถ้า ESP ถูกปิด
 
-    -- สร้างหรือหา Highlight ที่มีอยู่แล้ว
     local highlight = item:FindFirstChild("Highlight") or Instance.new("Highlight")
     highlight.Parent = item
     highlight.OutlineTransparency = 1
-
-    -- ตั้งค่า default สีเหลือง
     highlight.Adornee = item
     highlight.FillColor = Color3.fromRGB(255, 255, 0) -- สีเหลือง
 
-    -- เปลี่ยนสีตามชื่อ
     local redItems = { "Werewolf", "Runner", "RevolverOutlaw", "ShotgunOutlaw", "Vampire", "Wolf" }
     local greenItems = { "Moneybag" }
 
@@ -142,26 +138,22 @@ end
 
 -- ฟังก์ชันสำหรับเพิ่ม Highlight ให้ Humanoid (NPC)
 local function applyHighlight(humanoid)
-    if not ESPEnabled then return end -- หยุดทำงานถ้า ESP ถูกปิด
+    if not ESPEnabled then return end
 
     local character = humanoid.Parent
-    if not character or players:GetPlayerFromCharacter(character) then return end -- ข้ามถ้าเป็นตัวละครผู้เล่น
+    if not character or players:GetPlayerFromCharacter(character) then return end
 
-    local highlightTarget = character -- กำหนดให้ Highlight ตัวละครโดยปกติ
+    local highlightTarget = character
     if character:IsA("Model") and character:FindFirstChild("Humanoid") then
         if character.Parent and character.Parent.Name == "Horse" then
-            highlightTarget = character.Parent -- ถ้า Humanoid อยู่ใน Horse ให้ Highlight ที่ Horse
+            highlightTarget = character.Parent
         end
     end
 
     local highlight = highlightTarget:FindFirstChild("Highlight") or Instance.new("Highlight")
     highlight.Name = "Highlight"
     highlight.Parent = highlightTarget
-
-    -- กำหนดสี
     highlight.FillColor = highlightTarget.Name == "Horse" and Color3.fromRGB(0, 0, 255) or Color3.fromRGB(255, 0, 0)
-
-    -- ปิดขอบ
     highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
     highlight.OutlineTransparency = 1
 end
@@ -171,35 +163,30 @@ local function toggleESP(state)
     ESPEnabled = state
 
     if ESPEnabled then
-        -- เพิ่ม Highlight ให้ไอเทมทุกอันใน "RuntimeItems"
         for _, item in ipairs(itemsFolder:GetChildren()) do
             if item:IsA("Model") then
                 addHighlightEffect(item)
             end
         end
 
-        -- ตรวจจับไอเทมใหม่
         itemsFolder.ChildAdded:Connect(function(item)
             if item:IsA("Model") then
                 addHighlightEffect(item)
             end
         end)
 
-        -- เพิ่ม Highlight ให้ทุก Humanoid ในเกม
         for _, obj in ipairs(workspace:GetDescendants()) do
             if obj:IsA("Humanoid") then
                 applyHighlight(obj)
             end
         end
 
-        -- ตรวจจับ Humanoid ใหม่
         workspace.DescendantAdded:Connect(function(obj)
             if obj:IsA("Humanoid") then
                 applyHighlight(obj)
             end
         end)
     else
-        -- ปิด ESP โดยลบ Highlight ออกจากทุกไอเทมและ NPC
         for _, obj in ipairs(workspace:GetDescendants()) do
             local highlight = obj:FindFirstChild("Highlight")
             if highlight then highlight:Destroy() end
@@ -210,48 +197,24 @@ end
 -- เพิ่มปุ่ม Toggle ลงใน UI
 Section:NewToggle("🧬X-Ray🧬", "See through", function(state)
     toggleESP(state)
-
     if state == true then
         print("🧬X-Ray🧬(open)")
     elseif state == false then
         print("🧬X-Ray🧬(close)")
     end
 end)
---------------------------------------------------------------------------------------
-Section:NewButton("🕒ดูเวลา🕒", "เวลาในนาฬิกาบนรถไฟ", function()
-    local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local RunService = game:GetService("RunService")
 
--- สร้าง ScreenGui และ TextLabel
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "TimeDisplayGUI"
-screenGui.Parent = player:WaitForChild("PlayerGui")
+-- 🔁 เปิด X-Ray อัตโนมัติทุก 3 นาที และปิดใน 15 วินาที
+task.spawn(function()
+    while true do
+        task.wait(180) -- ทุก 3 นาที
+        toggleESP(true)
+        print("🧬 X-Ray Activated (Auto)")
 
-local textLabel = Instance.new("TextLabel")
-textLabel.Name = "TimeText"
-textLabel.Size = UDim2.new(0, 200, 0, 50)
-textLabel.Position = UDim2.new(1, -210, 1, -60) -- มุมขวาล่าง
-textLabel.AnchorPoint = Vector2.new(0, 0)
-textLabel.BackgroundTransparency = 0.5
-textLabel.BackgroundColor3 = Color3.new(0, 0, 0)
-textLabel.TextColor3 = Color3.new(1, 1, 1)
-textLabel.TextScaled = true
-textLabel.Font = Enum.Font.SourceSans
-textLabel.Parent = screenGui
-
--- อัปเดตข้อความทุกเฟรม
-RunService.RenderStepped:Connect(function()
-	local success, timeText = pcall(function()
-		return workspace.Train.TrainControls.TimeDial.SurfaceGui.TextLabel.Text
-	end)
-
-	if success then
-		textLabel.Text = timeText
-	else
-		textLabel.Text = "Loading..."
-	end
-end)
+        task.wait() -- แสดงผล 15 วินาที
+        toggleESP(false)
+        print("🧬 X-Ray Deactivated (Auto)")
+    end
 end)
 ----------------------------------- VISUAL EFFECTS -----------------------------------
 local Tab = Window:NewTab("🌏VISUAL EFFECTS🌏")
