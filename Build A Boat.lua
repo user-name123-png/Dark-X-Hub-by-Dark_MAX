@@ -207,7 +207,7 @@ Section:NewToggle("🐓🗒️🔁ไก่ตัน Script แบบวนซ�
         end)
         print("go loop")
 ---------------------------------
-        while task.wait(39) do
+        while task.wait(40) do
             -- เริ่มบิน
             local UIS = game:GetService("UserInputService")
             local player = game.Players.LocalPlayer
