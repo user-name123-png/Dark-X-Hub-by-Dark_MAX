@@ -4,7 +4,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️Build A Boat⚔️")
-local Section = Tab:NewSection("🔥v0.2.14🔥")
+local Section = Tab:NewSection("🔥v0.2.13🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -207,7 +207,7 @@ Section:NewToggle("🐓🗒️🔁ไก่ตัน Script แบบวนซ�
         end)
         print("go loop")
 ---------------------------------
-        while task.wait(45) do
+        while task.wait(39) do
             -- เริ่มบิน
             local UIS = game:GetService("UserInputService")
             local player = game.Players.LocalPlayer
