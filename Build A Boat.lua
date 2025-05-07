@@ -278,6 +278,8 @@ Section:NewToggle("🐓🗒️🔁ไก่ตัน Script แบบวนซ�
             -- Step 1: เทเลพอร์ตไปจุดเริ่ม
             hrp.CFrame = CFrame.new(Vector3.new(-50, 45, 1262))
 
+            task.wait(2)
+
             -- Step 2: เคลื่อนที่ไปยังจุดที่สองด้วยความเร็ว
             local distance = (destination - hrp.Position).Magnitude
             local moveSpeed = 300
