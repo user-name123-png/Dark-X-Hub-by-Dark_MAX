@@ -25,7 +25,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡�
 ----------------------------------- SUBSCRIDE -----------------------------------
 local Tab = Window:NewTab("🖐️Welcome🖐️")
 local Section = Tab:NewSection("⚔️Deat Rails⚔️")
-local Section = Tab:NewSection("🔥v0.1.2🔥")
+local Section = Tab:NewSection("🔥v0.1.4🔥")
 local Section = Tab:NewSection("📌Subscride📌")
 Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -118,21 +118,21 @@ local players = game:GetService("Players")
 
 -- ฟังก์ชันสำหรับเพิ่ม Highlight
 local function addHighlightEffect(item)
-    if not ESPEnabled then return end -- หยุดทำงานถ้า ESP ถูกปิด
+    if not ESPEnabled then return end
 
     local highlight = item:FindFirstChild("Highlight") or Instance.new("Highlight")
     highlight.Parent = item
     highlight.OutlineTransparency = 1
     highlight.Adornee = item
-    highlight.FillColor = Color3.fromRGB(255, 255, 0) -- สีเหลือง
+    highlight.FillColor = Color3.fromRGB(255, 255, 0)
 
     local redItems = { "Werewolf", "Runner", "RevolverOutlaw", "ShotgunOutlaw", "Vampire", "Wolf" }
     local greenItems = { "Moneybag" }
 
     if table.find(redItems, item.Name) then
-        highlight.FillColor = Color3.fromRGB(255, 0, 0) -- สีแดง
+        highlight.FillColor = Color3.fromRGB(255, 0, 0)
     elseif table.find(greenItems, item.Name) then
-        highlight.FillColor = Color3.fromRGB(0, 255, 0) -- สีเขียว
+        highlight.FillColor = Color3.fromRGB(0, 255, 0)
     end
 end
 
@@ -159,61 +159,51 @@ local function applyHighlight(humanoid)
 end
 
 -- ฟังก์ชันเปิด/ปิด ESP
-local function toggleESP(state)
-    ESPEnabled = state
+local function toggleESP()
+        ESPEnabled = not ESPEnabled
 
-    if ESPEnabled then
-        for _, item in ipairs(itemsFolder:GetChildren()) do
-            if item:IsA("Model") then
-                addHighlightEffect(item)
+        if ESPEnabled then
+            print("🧬X-Ray🧬(open)")
+            for _, item in ipairs(itemsFolder:GetChildren()) do
+                if item:IsA("Model") then
+                    addHighlightEffect(item)
+                end
             end
-        end
 
-        itemsFolder.ChildAdded:Connect(function(item)
-            if item:IsA("Model") then
-                addHighlightEffect(item)
-            end
-        end)
+            itemsFolder.ChildAdded:Connect(function(item)
+                if item:IsA("Model") then
+                    addHighlightEffect(item)
+                end
+            end)
 
-        for _, obj in ipairs(workspace:GetDescendants()) do
-            if obj:IsA("Humanoid") then
-                applyHighlight(obj)
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("Humanoid") then
+                    applyHighlight(obj)
+                end
             end
-        end
 
-        workspace.DescendantAdded:Connect(function(obj)
-            if obj:IsA("Humanoid") then
-                applyHighlight(obj)
+            workspace.DescendantAdded:Connect(function(obj)
+                if obj:IsA("Humanoid") then
+                    applyHighlight(obj)
+                end
+            end)
+        else
+            print("🧬X-Ray🧬(close)")
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                local highlight = obj:FindFirstChild("Highlight")
+                if highlight then
+                    highlight:Destroy()
+                end
             end
-        end)
-    else
-        for _, obj in ipairs(workspace:GetDescendants()) do
-            local highlight = obj:FindFirstChild("Highlight")
-            if highlight then highlight:Destroy() end
         end
     end
-end
 
--- เพิ่มปุ่ม Toggle ลงใน UI
-Section:NewToggle("🧬X-Ray🧬", "See through", function(state)
-    toggleESP(state)
-    if state == true then
-        print("🧬X-Ray🧬(open)")
-    elseif state == false then
-        print("🧬X-Ray🧬(close)")
-    end
-end)
-
--- 🔁 เปิด X-Ray อัตโนมัติทุก 3 นาที และปิดใน 15 วินาที
-task.spawn(function()
-    while true do
-        task.wait(180) -- ทุก 3 นาที
-        toggleESP(true)
-        print("🧬 X-Ray Activated (Auto)")
-
-        task.wait() -- แสดงผล 15 วินาที
-        toggleESP(false)
-        print("🧬 X-Ray Deactivated (Auto)")
+-- เปลี่ยนเป็นปุ่มกด
+Section:NewButton("🧬Toggle X-Ray🧬", "Click to toggle ESP highlights", function()
+    toggleESP()
+    while task.wait(180) do
+    toggleESP()
+    toggleESP()
     end
 end)
 ----------------------------------- VISUAL EFFECTS -----------------------------------
