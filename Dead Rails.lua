@@ -25,7 +25,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡�
 ----------------------------------- SUBSCRIDE -----------------------------------
 local Tab = Window:NewTab("🖐️Welcome🖐️")
 local Section = Tab:NewSection("⚔️Deat Rails⚔️")
-local Section = Tab:NewSection("🔥v0.2.2🔥")
+local Section = Tab:NewSection("🔥v0.3.0🔥")
 local Section = Tab:NewSection("📌Subscride📌")
 Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -208,6 +208,41 @@ Section:NewButton("🧬Toggle X-Ray🧬", "Click to toggle ESP highlights", func
 end)
 --------------------------------------------------------------------------------------
 local Section = Tab:NewSection("➕🔥หมวด Script เพิ่มเติม➕🔥")
+--------------------------------------------------------------------------------------
+local NoclipEnabled = false
+local player = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+Section:NewToggle("🚪เปิด/ปิด เดินทะลุ🚪", "เปิดหรือปิดการเดินทะลุสิ่งของ", function(state)
+    NoclipEnabled = state
+    if NoclipEnabled then
+    else
+
+        -- คืนค่า CanCollide = true ตอนปิด noclip
+        local character = player.Character
+        if character then
+            for _, part in ipairs(character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = true
+                end
+            end
+        end
+    end
+end)
+
+-- Loop ทำให้ CanCollide = false ตอนเปิด noclip
+RunService.Stepped:Connect(function()
+    if NoclipEnabled then
+        local character = player.Character
+        if character then
+            for _, part in ipairs(character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end
+end)
 --------------------------------------------------------------------------------------
 Section:NewButton("⚒️Xeno Seat Control⚒️", "นั่งเก้าอี้/บัคม้า บิน", function()
     local Players = game:GetService("Players")
