@@ -25,7 +25,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡�
 ----------------------------------- SUBSCRIDE -----------------------------------
 local Tab = Window:NewTab("🖐️Welcome🖐️")
 local Section = Tab:NewSection("⚔️Deat Rails⚔️")
-local Section = Tab:NewSection("🔥v0.3.0🔥")
+local Section = Tab:NewSection("🔥v0.4.4🔥")
 local Section = Tab:NewSection("📌Subscride📌")
 Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -620,4 +620,64 @@ Section:NewKeybind("🗑️🗝️Shortcut Key Auto Automatically Discards All I
         task.wait()  -- ทิ้งไอเทมทุก 1 วินาที (สามารถเปลี่ยนค่าได้)
         Number = Number + 1  -- เพิ่มค่าของ Number
     end
+end)
+--------------------------------------------------------------------------------------
+-- 📍 LocalScript
+local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local enabled = false
+local holdDistance = 1000 -- ระยะที่ใกล้พอจะกดได้
+
+-- ฟังก์ชันเช็คระยะและกด ProximityPrompt แบบ Hold
+local function autoHoldNearbyPrompt()
+    while enabled do
+        for _, prompt in pairs(workspace:GetDescendants()) do
+            if prompt:IsA("ProximityPrompt")
+                and prompt.ActionText == "Collect"
+                and prompt.Enabled
+                and prompt.HoldDuration > 0
+                and prompt.Parent:IsA("BasePart") then
+
+                local distance = (prompt.Parent.Position - humanoidRootPart.Position).Magnitude
+                if distance <= holdDistance then
+                    fireproximityprompt(prompt, 1, true) -- เริ่มกดค้าง
+                    task.wait(prompt.HoldDuration + 0)
+                    fireproximityprompt(prompt, 1, false) -- ปล่อย
+                end
+            end
+        end
+        task.wait()
+    end
+end
+
+-- สลับเปิด/ปิดด้วยปุ่ม M
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.M then
+        enabled = not enabled
+        if enabled then
+            print("🟢 Auto Hold ON")
+            autoHoldNearbyPrompt()
+        else
+            print("🔴 Auto Hold OFF")
+        end
+    end
+end)
+Section:NewKeybind("🗝️💵เก็บเงิน🗝️💵", "กด M จะกดเก็บเงินให้เอง", Enum.KeyCode.M, function()
+    
+end)
+--------------------------------------------------------------------------------------
+Section:NewButton("🔁เข้าร่วมอีกครั้ง🔁", "ออกเกมแล้วเข้าใหม่มาในเซิฟเดิม", function()
+    --เข้าร่วมอีกครั้ง
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+
+-- รีจอยกลับไปยังเซิร์ฟเวอร์เดิม
+TeleportService:Teleport(game.PlaceId, player)
 end)
