@@ -25,7 +25,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡�
 ----------------------------------- SUBSCRIDE -----------------------------------
 local Tab = Window:NewTab("🖐️Welcome🖐️")
 local Section = Tab:NewSection("⚔️Deat Rails⚔️")
-local Section = Tab:NewSection("🔥v0.4.4🔥")
+local Section = Tab:NewSection("🔥v0.4.5🔥")
 local Section = Tab:NewSection("📌Subscride📌")
 Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -550,9 +550,9 @@ local Tab = Window:NewTab("🌏VISUAL EFFECTS🌏")
 local Section = Tab:NewSection("💡Brightness💡")
 ----------------------------------- Adjust Exposure -----------------------------------
 Section:NewButton("🔥🔦ปรับแสง🔥🔦", "ปรับแสงให้สว่างขึ้นเป็น 6", function()
+    print("✅ Brightness set to 6")
     while task.wait() do
         game:GetService("Lighting").Brightness = 6
-        print("✅ Brightness set to 6")
     end
 end)
 --Fog
