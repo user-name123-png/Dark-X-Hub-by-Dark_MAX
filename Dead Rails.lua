@@ -25,7 +25,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub by Dark_MAX🤏🧠🐓🗡�
 ----------------------------------- SUBSCRIDE -----------------------------------
 local Tab = Window:NewTab("🖐️Welcome🖐️")
 local Section = Tab:NewSection("⚔️Deat Rails⚔️")
-local Section = Tab:NewSection("🔥v0.2.0🔥")
+local Section = Tab:NewSection("🔥v0.2.2🔥")
 local Section = Tab:NewSection("📌Subscride📌")
 Section:NewButton("Subscribe Me(YouTube)", "Subscribe to the YouTube channel Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -514,69 +514,23 @@ local Tab = Window:NewTab("🌏VISUAL EFFECTS🌏")
 --Brightness
 local Section = Tab:NewSection("💡Brightness💡")
 ----------------------------------- Adjust Exposure -----------------------------------
-local lighting = game:GetService("Lighting")
-local brightnessLevel = 5 -- ค่าความสว่างเริ่มต้น
-local autoBrightnessEnabled = false -- ตัวแปรเปิด/ปิดระบบปรับแสง
-
--- สร้างแถบเลื่อน (Slider) สำหรับปรับค่าความสว่าง
-Section:NewSlider("⚡📈Adjust Exposure⚡📈", "Adjust the brightness of the light", 20, 1, function(s)
-    print("⚡📈Adjust Exposure⚡📈(" + s + ")")
-    
-    brightnessLevel = s
-    if autoBrightnessEnabled then
-        lighting.Brightness = brightnessLevel
-    end
-end)
-
--- สร้าง Toggle สำหรับเปิด/ปิดการปรับแสงอัตโนมัติ
-Section:NewToggle("🔥🔦Auto Brightness🔥🔦", "Enable or disable automatic brightness adjustment", function(state)
-    autoBrightnessEnabled = state
-
-    if autoStorageEnabled == true then
-        print("🔥🔦Auto Brightness🔥🔦(open)")
-    elseif autoStorageEnabled == false then
-        print("🔥🔦Auto Brightness🔥🔦(close)")
-    end
-
-    if autoBrightnessEnabled then
-        -- เปิดใช้งานการปรับแสงอัตโนมัติ
-        lighting.Brightness = brightnessLevel
-    else
-        -- รีเซ็ตเป็นค่าเริ่มต้น
-        lighting.Brightness = 1
+Section:NewButton("🔥🔦ปรับแสง🔥🔦", "ปรับแสงให้สว่างขึ้นเป็น 6", function()
+    while task.wait() do
+        game:GetService("Lighting").Brightness = 6
+        print("✅ Brightness set to 6")
     end
 end)
 --Fog
-local Section = Tab:NewSection("Fog")
 ----------------------------------- Adjust fog value -----------------------------------
-local lighting = game:GetService("Lighting")
-local fogDensity = 0 -- ค่าเริ่มต้นความหนาของหมอก
-local autoFogEnabled = false -- สถานะการเปิด/ปิดการใช้งานหมอก
+local Section = Tab:NewSection("☁️Fog☁️")
 
--- แถบเลื่อนปรับค่าความหนาของหมอก (Density)
-Section:NewSlider("🚬📈Fog Density🚬📈", "Adjust the fog density", 20, 0, function(s)
-    print("🚬📈Fog Density🚬📈(" + s + ")")
-
-    fogDensity = s / 100 -- แปลงค่าให้เป็นช่วง 0 ถึง 1
-    if autoFogEnabled then
-        lighting.Atmosphere.Density = fogDensity -- ปรับความหนาของหมอกตามค่าในแถบเลื่อน
-    end
-end)
-
--- ปุ่ม Toggle สำหรับเปิด/ปิดการใช้งานหมอก
-Section:NewToggle("🚬Enable Fog🚬", "Enable or disable fog", function(state)
-    autoFogEnabled = state
-
-    if autoStorageEnabled == true then
-        print("🚬Enable Fog🚬(open)")
-    elseif autoStorageEnabled == false then
-        print("🚬Enable Fog🚬(close)")
-    end
-
-    if autoFogEnabled then
-        lighting.Atmosphere.Density = fogDensity -- ตั้งค่าความหนาของหมอกเมื่อเปิดใช้งาน
+Section:NewButton("🚬ลบหมอก🚬", "ปรับหมอกเป็น 0", function()
+    local lighting = game:GetService("Lighting")
+    if lighting:FindFirstChild("Atmosphere") then
+        lighting.Atmosphere.Density = 0
+        print("☁️ Fog disabled (Density = 0)")
     else
-        lighting.Atmosphere.Density = 0.4 -- ถ้าปิดหมอก, หมอกจะหายไป
+        warn("❌ Atmosphere object not found in Lighting")
     end
 end)
 ----------------------------------- SETTINGS -----------------------------------
