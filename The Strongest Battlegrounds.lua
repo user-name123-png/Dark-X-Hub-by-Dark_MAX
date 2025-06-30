@@ -23,7 +23,7 @@ local Window = Library.CreateLib("🗡️Dark X Hub โดย Dark_MAX🤏🧠�
 
 local Tab = Window:NewTab("🏠หน้าหลัก🏠")
 local Section = Tab:NewSection("⚔️The Strongest Battlegrounds⚔️")
-local Section = Tab:NewSection("🔥v0.4.1🔥")
+local Section = Tab:NewSection("🔥v0.4.2🔥")
 local Section = Tab:NewSection("📌ติดตาม📌")
 Section:NewButton("Subscribe YouTube ผมซะ", "คัดลอกลิ้งค์หน้าโปรไฟล์ YouTube ช่อง Dark_MAX0207.", function()
     setclipboard("https://www.youtube.com/@Dark_MAX0207")
@@ -98,7 +98,7 @@ Section:NewKeybind("🗑️หยิบถังขยะ🗑️", "กด E เ
     debounce = false -- ปลดล็อกให้กดได้อีกครั้ง
 end)
 
-Section:NewKeybind("🔥พาลงนรก🔥", "พา Player ไปตาย", Enum.KeyCode.R, function()
+Section:NewKeybind("🔥คามุย🔥", "หนีชั่วคราว", Enum.KeyCode.R, function()
 	local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
